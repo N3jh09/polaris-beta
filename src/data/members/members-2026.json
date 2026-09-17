@@ -1,0 +1,72 @@
+[
+    {
+        "firstName": "Dr. Sharon",
+        "lastName": "Palomares",
+        "position": "Adviser"
+    },
+    {
+        "firstName": "Venice Maye",
+        "lastName": "Castañaga",
+        "position": "President"
+    },
+    {
+        "firstName": "Ariccia Mari",
+        "lastName": "Calsis",
+        "position": "Vice President"
+    },
+    {
+        "firstName": "Irish Feby",
+        "lastName": "Villa Cruz",
+        "position": "Secretary"
+    },
+    {
+        "firstName": "Jeanina",
+        "lastName": "Balisbisana",
+        "position": "Treasurer"
+    },
+    {
+        "firstName": "Rosalie Bernice",
+        "lastName": "Improgo",
+        "position": "Auditor"
+    },
+    {
+        "firstName": "Ameerah Riccel",
+        "lastName": "Calsis",
+        "position": "PRO"
+    },
+    {
+        "firstName": "John Carl",
+        "lastName": "Pabo",
+        "position": "Business Manager"
+    },
+    {
+        "firstName": "Nathan Pierre",
+        "lastName": "Ng",
+        "position": "Business Manager"
+    },
+    {
+        "firstName": "Agustin Jhedrian",
+        "lastName": "Quimson",
+        "position": "Media Lead"
+    },
+    {
+        "firstName": "Lleanne",
+        "lastName": "Baltazar",
+        "position": "Creatives Lead"
+    },
+    {
+        "firstName": "Queen Angel",
+        "lastName": "Balintec",
+        "position": "Member"
+    },
+    {
+        "firstName": "Sheena Marie",
+        "lastName": "Orani",
+        "position": "Member"
+    },
+    {
+        "firstName": "Nadine",
+        "lastName": "Natividad",
+        "position": "Member"
+    }
+]

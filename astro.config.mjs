@@ -1,5 +1,12 @@
-// @ts-check
+// @ts-checks
 import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
-export default defineConfig({});
+
+import cloudflare from '@astrojs/cloudflare';
+
+export default defineConfig({
+    trailingSlash: 'ignore',
+    output: 'server', // or 'hybrid'
+    adapter: cloudflare(),
+});

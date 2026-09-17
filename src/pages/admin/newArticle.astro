@@ -1,0 +1,253 @@
+---
+import Layout from "../../components/global.astro";
+import Nav from "../../components/nav.astro";
+
+// Define the TypeScript interface for your JSON structure
+interface AuthorData {
+    authors: string[];
+}
+
+// 1. Eagerly load all matching JSON files at build time
+const jsonFiles = import.meta.glob<AuthorData>(
+    "/src/data/authors/authors-*.json",
+    {
+        eager: true,
+        import: "default",
+    },
+);
+
+// 2. Set the target year
+const currentYear = new Date().getFullYear();
+
+// 3. Extract, sort, and find the most recent available year <= currentYear
+const availableYears = Object.keys(jsonFiles)
+    .map((path) => {
+        const match = path.match(/authors-(\d{4})\.json$/);
+        return match ? parseInt(match[1], 10) : null;
+    })
+    .filter((year): year is number => year !== null && year <= currentYear)
+    .sort((a, b) => b - a); // Sort descending to get the newest year first
+
+// 4. Retrieve authors from the target/fallback year
+const targetYear = availableYears[0];
+const selectedPath = `/src/data/authors/authors-${targetYear}.json`;
+const authorData = targetYear ? jsonFiles[selectedPath] : null;
+const authorsList = authorData?.authors ?? [];
+---
+
+<!doctype html>
+<html>
+    <head>
+        <Layout title="Make an Article" />
+        <style is:global>
+            /* Style the toolbar specifically */
+            .ql-toolbar.ql-snow {
+                background-color: #ffffff !important;
+                border-bottom: 1px solid #ccc;
+            }
+
+            /* Style the text container */
+            .ql-container.ql-snow {
+                background-color: #ffffff !important;
+            }
+        </style>
+    </head>
+    <body style="background: white;">
+        <Nav />
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-4 col-sm-12">
+                    <input
+                        class="col-12"
+                        type="text"
+                        id="title"
+                        placeholder="TITLE"
+                        required
+                    />
+                    <select class="col-12" name="author" id="author" required>
+                        <option
+                            value=""
+                            selected
+                            disabled
+                            hidden
+                            style="color: grey;">Author</option
+                        >
+                        {
+                            authorsList.length === 0 ? (
+                                <option value="" disabled selected>
+                                    No authors found
+                                </option>
+                            ) : (
+                                authorsList.map((author) => (
+                                    <option value={author}>{author}</option>
+                                ))
+                            )
+                        }
+                    </select>
+                </div>
+
+                <textarea
+                    class="col-lg-8 col-sm-12"
+                    id="description"
+                    placeholder="A short summary of the post..."
+                    rows="2"></textarea>
+            </div>
+            <div class="row form-group">
+                <label></label>
+                <div id="editor"></div>
+            </div>
+        </div>
+
+        <div class="editor-container">
+            <input
+                class="col-12"
+                type="text"
+                id="keyCode"
+                placeholder="**Insert Admin Key Here"
+                required
+            />
+            <button id="publish-btn" type="button">Publish Article</button>
+            <p id="status-msg"></p>
+        </div>
+    </body><script is:inline src="https://unpkg.com/turndown/dist/turndown.js"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"
+    ></script>
+    <script>
+        declare const TurndownService: any;
+        import Quill from "quill";
+        import "quill/dist/quill.snow.css";
+
+        const toolbarOptions = [
+            [{ header: 1 }, { header: 2 }],
+            [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
+            ["bold", "italic", "blockquote", "link", "image"],
+        ];
+
+        const turndownService = new TurndownService();
+        const quill = new Quill("#editor", {
+            modules: {
+                toolbar: toolbarOptions,
+            },
+            theme: "snow",
+        });
+
+        const publishBtn = document.getElementById("publish-btn");
+        const statusMsg = document.getElementById("status-msg");
+
+        // Slug generator helper
+        function generateSlug(title: string, dateStr: string): string {
+            const cleanTitle = title
+                .toLowerCase()
+                .trim()
+                .replace(/[^\w\s-]/g, "") // Remove special characters
+                .replace(/\s+/g, "-"); // Replace spaces with '-'
+
+            return `${cleanTitle}-${dateStr}`;
+        }
+
+        publishBtn?.addEventListener("click", async () => {
+            if (!statusMsg) return;
+
+            const title = (document.getElementById("title") as HTMLInputElement)
+                .value;
+            const author = (
+                document.getElementById("author") as HTMLInputElement
+            ).value;
+            const description = (
+                document.getElementById("description") as HTMLTextAreaElement
+            ).value;
+
+            if (!title || !author) {
+                statusMsg.innerText =
+                    "Please provide both a Title and an Author.";
+                return;
+            }
+
+            statusMsg.innerText = "Publishing...";
+
+            // 1. Auto-generate Date (YYYY-MM-DD)
+            const now = new Date();
+            const pubDate = now.toISOString().split("T")[0];
+
+            // 2. Auto-generate Slug (title-formatted-YYYY-MM-DD)
+            const slug = generateSlug(title, pubDate);
+
+            // 3. Convert Quill HTML to Markdown
+            const bodyMarkdown = turndownService.turndown(quill.root.innerHTML);
+
+            // 4. Construct Markdown with Frontmatter YAML
+            const fullMarkdown = `---
+title: "${title.replace(/"/g, '\\"')}"
+author: "${author.replace(/"/g, '\\"')}"
+pubDate: ${pubDate}
+slug: "${slug}"
+desc: "${description.replace(/"/g, '\\"')}"
+---
+
+${bodyMarkdown}`;
+
+            // 5. Send payload to API endpoint
+            try {
+                const response = await fetch("/api/save-github", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        slug,
+                        content: fullMarkdown,
+                        type: "article", // Specifies the destination subfolder
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    statusMsg.innerText = `Published successfully! File: ${slug}.md`;
+                } else {
+                    statusMsg.innerText = `Error: ${data.message}`;
+                }
+            } catch (err) {
+                statusMsg.innerText =
+                    "Network error while attempting to publish.";
+            }
+        });
+    </script>
+</html>
+
+<style>
+    .editor-container {
+        max-width: 700px;
+        margin: 2rem auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+    }
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+    input,
+    textarea,
+    select {
+        padding: 0.6rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+    #editor {
+        height: 300px;
+        background: #fff;
+    }
+    button {
+        padding: 0.8rem;
+        background-color: #000957;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+    }
+</style>

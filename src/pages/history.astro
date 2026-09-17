@@ -1,0 +1,183 @@
+---
+import Layout from "../components/global.astro";
+import Nav from "../components/nav.astro";
+
+const memberFiles = import.meta.glob("../data/members/members-*.json", {
+    eager: true,
+});
+
+// 1. Get all available years sorted in descending order (e.g., [2026, 2025, 2024])
+const availableYears = Object.keys(memberFiles)
+    .map((path) => {
+        const match = path.match(/members-(\d{4})\.json$/);
+        return match ? Number(match[1]) : null;
+    })
+    .filter((year): year is number => year !== null)
+    .sort((a, b) => b - a);
+
+const ucwords = (str: string = "") => {
+    if (!str) return "";
+    return str
+        .toLowerCase()
+        .split(" ")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+};
+
+// 2. Helper function to extract and categorize members for any given year data
+const categorizeMembers = (rawData: any) => {
+    const activeMembers: any[] = rawData.default || rawData || [];
+
+    const execPositions = ["adviser", "president", "vice president"];
+    const execMembers = activeMembers.filter((m) =>
+        execPositions.includes(m.position?.trim().toLowerCase() ?? ""),
+    );
+
+    const excludedOther = [
+        "member",
+        "president",
+        "vice president",
+        "media lead",
+        "creatives lead",
+        "adviser",
+    ];
+    const otherOfficers = activeMembers.filter(
+        (m) => !excludedOther.includes(m.position?.trim().toLowerCase() ?? ""),
+    );
+
+    const leadPositions = ["media lead", "creatives lead"];
+    const leads = activeMembers.filter((m) =>
+        leadPositions.includes(m.position?.trim().toLowerCase() ?? ""),
+    );
+
+    const regularMembers = [...activeMembers]
+        .filter((m) => (m.position?.trim().toLowerCase() ?? "") === "member")
+        .sort((a, b) => (a.lastName || "").localeCompare(b.lastName || ""));
+
+    return { execMembers, otherOfficers, leads, regularMembers };
+};
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <Layout title="Member History Timeline" />
+        <style>
+            .name {
+                color: #828bda !important;
+            }
+        </style>
+    </head>
+
+    <body>
+        <Nav />
+
+        <!-- Hero Container -->
+        <div class="container-fluid px-4 mt-4" style="background-color: #EBE645;">
+            <div class="row align-items-center">
+                <div class="col-lg-4 col-md-12 d-flex flex-column justify-content-center mb-4 mb-lg-0">
+                    <h1 style="margin: 0; font-size: 5.2rem; font-family: 'Sansation', sans-serif !important; font-weight: 700 !important;">
+                        TIMELINE
+                    </h1>
+                    <p style="margin: 1rem 0; font-size: 1.4rem; font-family: 'Sansation', sans-serif;">
+                        Explore the rich history of Polaris Northern Stars members through the years!
+                    </p>
+                </div>
+                <div class="col-lg-8 col-md-12 d-flex flex-column justify-content-center" style="background-color: #000957; min-height: 450px;"></div>
+            </div>
+        </div>
+
+        <br />
+
+        <!-- TIMELINE LOOP -->
+        <div class="container-fluid" style="background-color: #000957;">
+            <div class="row">
+                <div class="col-12" style="padding: 50px 0 0 20px;">
+                    <h1 style="color: white; font-family: 'Sansation', sans-serif; font-weight: 700;">
+                        MEMBER ARCHIVE TIMELINE
+                    </h1>
+                </div>
+            </div>
+
+            {
+                availableYears.map((year) => {
+                    const fileKey = Object.keys(memberFiles).find((path) =>
+                        path.endsWith(`members-${year}.json`),
+                    );
+                    const rawData = fileKey ? memberFiles[fileKey] : [];
+                    const { execMembers, otherOfficers, leads, regularMembers } = categorizeMembers(rawData);
+
+                    return (
+                        <div class="year-block my-5 border-bottom border-light pb-4">
+                            <!-- Year Header -->
+                            <div class="row px-3" style="padding: 0;">
+                                <div class="col-12" style="padding: 0px !important;">
+                                    <h2 style="color: white; font-family: 'Sansation', sans-serif; font-weight: 700; font-size: 2.5rem; padding: 0;">
+                                        {year}
+                                    </h2>
+                                </div>
+                            </div>
+
+                            <div class="row px-3">
+                                <div class="col-12" style="padding: 20px 0;">
+                                    <!-- PRES AND VP -->
+                                    <div class="row">
+                                        {execMembers.map((row) => (
+                                            <div class="text name col-lg-3 col-sm-12" style="margin: 2px 0 2px 0;">
+                                                <b>{ucwords(row.position)}: </b>
+                                                {ucwords(row["firstName"])} {ucwords(row["lastName"])}
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <hr class="border-secondary" />
+
+                                    <!-- OTHER POSITIONS -->
+                                    <div class="row">
+                                        {otherOfficers.map((row) => {
+                                            const formattedPosition =
+                                                row.position.toLowerCase() === "pro"
+                                                    ? row.position.toUpperCase()
+                                                    : ucwords(row.position);
+
+                                            return (
+                                                <div class="text name col-lg-3 col-sm-12" style="margin: 2px 0 2px 0">
+                                                    <b>{formattedPosition}: </b>
+                                                    {ucwords(row["firstName"])} {ucwords(row["lastName"])}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+
+                                    <hr class="border-secondary" />
+
+                                    <!-- LEADS -->
+                                    <div class="row">
+                                        {leads.map((row) => (
+                                            <div class="text name col-lg-3 col-sm-12">
+                                                <b>{ucwords(row.position)}: </b>
+                                                {ucwords(row["firstName"])} {ucwords(row["lastName"])}
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <!-- MEMBERS -->
+                                    <div class="row mt-3">
+                                        <h3 style="color: #828bda; font-family: 'Sansation', sans-serif; font-weight: 700; font-size: 1.5rem; padding-top: 20px;">
+                                            Members
+                                        </h3>
+                                        {regularMembers.map((row) => (
+                                            <div class="text name col-lg-3 col-sm-12" style="margin: 2px 0 2px 0;">
+                                                {ucwords(row["lastName"])}, {ucwords(row["firstName"])}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })
+            }
+        </div>
+    </body>
+</html>

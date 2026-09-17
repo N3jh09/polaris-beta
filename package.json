@@ -12,9 +12,17 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^7.3.3"
+    "@astrojs/cloudflare": "^14.3.2",
+    "@octokit/rest": "^22.0.1",
+    "astro": "^7.3.3",
+    "quill": "^2.0.3"
   },
   "allowScripts": {
     "esbuild": true
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260917.1",
+    "@types/quill": "^2.0.14",
+    "wrangler": "^4.133.0"
   }
 }

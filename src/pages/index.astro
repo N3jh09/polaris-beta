@@ -1,11 +1,202 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Layout from "../components/global.astro";
+import Nav from "../components/nav.astro";
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<!doctype html>
+<html lang="en">
+	<head>
+		<Layout title="Polaris" />
+	</head>
+
+	<body>
+		<Nav />
+
+		<div
+			class="container-fluid px-4 mt-4"
+			style="background: linear-gradient(45deg,
+      #ffffff10, #ffffff4d, #ffffff6a);"
+		>
+			<div class="row align-items-center">
+				<!-- Left Column: Vertically centers heading & paragraph -->
+				<div
+					id="introMain"
+					class="col-lg-4 col-md-12 d-flex flex-column justify-content-center mb-4 mb-lg-0"
+				>
+					<h1
+						id="title"
+						style="color: white; margin: 0; font-size: 5.2rem; font-family: 'Sansation', sans-serif !important; font-weight: 700 !important;"
+					>
+						NORTHERN STARS!
+					</h1>
+					<p
+						style="margin: 0; font-size: 1.4rem; font-family: 'Sansation', sans-serif; color: white"
+					>
+						Philippine Science High School - Ilocos Region Campus's
+						First Space Organization
+					</p>
+					<ul class="nav" style="margin-top: 10px;">
+						<li
+							class="nav-item rounded-5"
+							style="background-color: #000957; margin-right: 10px;"
+						>
+							<a
+								class="text nav-link"
+								style="font-family: 'Sansation', sans-serif;"
+								target="_blank"
+								href="https://www.facebook.com/share/19WhUH9qGP/"
+								>Facebook</a
+							>
+						</li>
+						<li
+							class="nav-item rounded-5"
+							style="background-color: #000957; margin-right: 10px;"
+						>
+							<a
+								class="text nav-link"
+								style="font-family: 'Sansation', sans-serif;"
+								target="_blank"
+								href="https://www.instagram.com/polarisnorthstars?stkn=eGg5cG9vMXJod3dn"
+								>Instagram</a
+							>
+						</li>
+						<li
+							class="nav-item rounded-5"
+							style="background-color: #000957;"
+						>
+							<a
+								class="text nav-link"
+								style="font-family: 'Sansation', sans-serif;"
+								target="_blank"
+								href="https://www.tiktok.com/@polaris.north.sta3?_r=1&_t=ZS-99cC3gXpWZL"
+								>Tiktok</a
+							>
+						</li>
+					</ul>
+				</div>
+
+				<!-- Right Column: Expands child rows to distribute full height -->
+				<div
+					id="col2Main"
+					class="col-lg-8 col-md-12 d-flex flex-column justify-content-center"
+					style="background-color: #000957d8; min-height: 600px;"
+				>
+					<div class="row g-3">
+						<div class="col-sm-6" style="position: relative;">
+							<div
+								class="p-4 text-white rounded-5 h-100 bigBox"
+								style="position: relative; z-index: 2;"
+							>
+								<h4
+									style="font-family: 'Sansation', sans-serif; font-weight: 700;"
+								>
+									VISION
+								</h4>
+								<p class="text">Lorem ipsum...</p>
+							</div>
+						</div>
+						<div class="col-sm-6" style="position: relative;">
+							<div
+								class="p-4 text-white rounded-5 h-100 bigBox"
+								style="position: relative; z-index: 2;"
+							>
+								<h4
+									style="font-family: 'Sansation', sans-serif; font-weight: 700;"
+								>
+									MISSION
+								</h4>
+								<p class="text">Lorem ipsum...</p>
+							</div>
+						</div>
+					</div>
+					<div class="row g-3">
+						<div
+							id="newsLabel"
+							class="col-sm-12"
+							style="margin-top: 3rem; padding-left: 20px; color: white;"
+						>
+							<h3
+								style="font-family: 'Sansation', sans-serif; font-weight: 700;"
+							>
+								READ LATEST NEWS
+							</h3>
+						</div>
+						<div class="col-sm-12" style="margin-top: 0;">
+							<div
+								class="row"
+								style="padding: 2px 12px 2px 12px; height: 80px;"
+							>
+								<div
+									class="card newsMain"
+									style="border-radius: 2rem 2rem 0 0;"
+								>
+									<div class="card-body">Basic card</div>
+								</div>
+							</div>
+							<div
+								class="row"
+								style="padding: 2px 12px 2px 12px; height: 80px;"
+							>
+								<div class="card newsMain">
+									<div class="card-body">Basic card</div>
+								</div>
+							</div>
+							<div
+								class="row"
+								style="padding: 2px 12px 2px 12px; height: 80px;"
+							>
+								<div
+									class="card newsMain"
+									style="border-radius: 0 0 2rem 2rem;"
+								>
+									<div class="card-body">Basic card</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<br />
+
+		<div class="container-fluid" style="background-color: #000957;">
+			<div class="row">
+				<div class="col-12" style="padding: 50px 0 0 20px;">
+					<h1
+						style="color: white; font-family: 'Sansation', sans-serif; font-weight: 700;"
+					>
+						DISCLAIMER AND TRANSPARENCY
+					</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div
+					class="col-12 text"
+					style="padding: 20px 20px 50px 20px; color: #828bda !important;"
+				>
+					This website is a CONCEPT product of polaris. Although the
+					website is functional and is considered as Polaris Northen
+					Star's official website, this project's structure is
+					limited.
+					<br /><br />
+					The Polaris Northern Stars website is an independent project initiated
+					by the organization's 2026 Media Committee. This project was made
+					with the help of artificial intelligence, assisting in research,
+					brainstorming for possible frameworks of the website, and back-end
+					code. All public texts, feature-list, and other publicly visible
+					content is fully conceptualized and created by our community.
+					All public content such as blogs, articles, and artworks are fully
+					made by our hardworking journalist authors, illustrators, and
+					technical members. Due to limitations, this website is ran via
+					Github Pages, using an Astro core.
+					<br /><br />
+					NOTE: This project is planned to be passed onto future Media and
+					Creatives members and leaders. We hope that this project evolves
+					beyond a Github repository, embodying what the original 2026 Media
+					commitee envisioned and more.
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
