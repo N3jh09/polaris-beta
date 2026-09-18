@@ -21,23 +21,115 @@ const { Content } = await render(post);
 ---
 
 <BaseLayout title={post.data.title}>
-    <a href="/blogs" style="text-decoration: none; color:gray;">Go back</a>
-    <br />
-    <h6 style="color: #000957;"><b>POLARIS Articles</b></h6>
-    <h1 class="col-lg-8 col-sm-12"><b>{post.data.title}</b></h1>
-    <p style="color: grey;">
-        | uploaded on {
-            new Date(post.data.pubDate)
-                .toLocaleString("en-US", {
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric",
-                })
-                .toLocaleLowerCase()
-        } ・ written by {post.data.author.toLowerCase()}
-    </p>
-    <br />
-    <div class="col-lg-6 col-sm-12">
-        <Content />
+    <div class="row">
+        <div class="col-lg-9 col-sm-12">
+            <a href="/articles" style="text-decoration: none; color:gray;"
+                >Go back</a
+            >
+            <br />
+            <h6 style="color: #000957;"><b>POLARIS Articles</b></h6>
+            <h1 class="col-lg-8 col-sm-12"><b>{post.data.title}</b></h1>
+            <p style="color: grey;">
+                | uploaded on {
+                    new Date(post.data.pubDate)
+                        .toLocaleString("en-US", {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                        })
+                        .toLocaleLowerCase()
+                } ・ written by {post.data.author.toLowerCase()}
+            </p>
+            {
+                post.data.tags && post.data.tags.length > 0 && (
+                    <div class="tag-row">
+                        {post.data.tags.map((tag) => (
+                            <a href={`/article/tag/${tag}/1`} class="tag-pill">
+                                {tag}
+                            </a>
+                        ))}
+                    </div>
+                )
+            }
+            <br />
+            <div class="col-lg-9 col-sm-12 post-content">
+                <Content />
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-12" style="padding-top: 50px;">
+            <div
+                style="border: 2px solid lightgrey; padding: 15px; border-radius: 5px;"
+            >
+                <h5 style="padding-bottom: 0; padding-left: 5px;">
+                    search more articles
+                </h5>
+                <form action="/article/search" method="get">
+                    <input
+                        class="col-12 filterItem"
+                        type="text"
+                        id="search"
+                        name="q"
+                        placeholder="search blogs"
+                    />
+                    <input
+                        class="col-12 filterItem"
+                        type="text"
+                        id="author"
+                        name="author"
+                        placeholder="search for author"
+                    />
+                    <input
+                        class="col-12 filterItem"
+                        type="text"
+                        id="tags"
+                        name="tags"
+                        placeholder="search tags (comma separated)"
+                    />
+                    <br />
+                    <br />
+                    <button class="col-12" id="submitSearch"
+                        >submit search</button
+                    >
+                </form>
+            </div>
+        </div>
     </div>
 </BaseLayout>
+
+<style>
+    .tag-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin: 8px 0;
+    }
+
+    .tag-pill {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 50px;
+        background-color: #eef0fa;
+        color: #000957;
+        font-size: 0.85rem;
+        text-decoration: none;
+    }
+
+    .tag-pill:hover {
+        background-color: #dde1f5;
+    }
+
+    .filterItem {
+        padding: 10px;
+        border-radius: 50px;
+        border: 2px solid grey;
+        margin-bottom: 5px;
+    }
+
+    #submitSearch {
+        padding: 10px;
+        background-color: #000957;
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+</style>

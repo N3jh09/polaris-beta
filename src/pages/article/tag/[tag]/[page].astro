@@ -1,36 +1,60 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 import type { GetStaticPaths } from "astro";
 
-import Layout from "../../components/global.astro";
-import Nav from "../../components/nav.astro";
-import Little from "../../components/blogLittle.astro";
+import Layout from "../../../../components/global.astro";
+import Nav from "../../../../components/nav.astro";
+import Little from "../../../../components/blogLittle.astro";
 
-// Forces Astro to use getStaticPaths even in SSR mode
+// Static-friendly: build paginated pages per tag that actually exists in
+// the content, discovered at build time. No fixed tag list anywhere.
 export const prerender = true;
 
 export const getStaticPaths = (async ({ paginate }) => {
-    const posts = (await getCollection("article")).sort(
-        (a, b) =>
-            new Date(b.data.pubDate).getTime() -
-            new Date(a.data.pubDate).getTime(),
-    );
+    const posts = await getCollection("article");
 
-    return paginate(posts, { pageSize: 5 });
+    // Collect every distinct tag across all posts
+    const tagSet = new Set<string>();
+    for (const post of posts) {
+        for (const tag of post.data.tags ?? []) {
+            tagSet.add(tag);
+        }
+    }
+
+    return Array.from(tagSet).flatMap((tag) => {
+        const matching = posts
+            .filter((p) => (p.data.tags ?? []).includes(tag))
+            .sort(
+                (a, b) =>
+                    new Date(b.data.pubDate).getTime() -
+                    new Date(a.data.pubDate).getTime(),
+            );
+
+        return paginate(matching, {
+            params: { tag },
+            pageSize: 5,
+        });
+    });
 }) satisfies GetStaticPaths;
 
-const { page } = Astro.props;
+interface Props {
+    page: {
+        data: CollectionEntry<"article">[];
+        total: number;
+        currentPage: number;
+        lastPage: number;
+        url: { prev?: string; next?: string };
+    };
+}
 
-// Tag cloud scoped to just the posts shown on THIS page (not site-wide)
-const pageTags = Array.from(
-    new Set(page.data.flatMap((i) => i.data.tags ?? [])),
-).sort();
+const { tag } = Astro.params;
+const { page } = Astro.props as Props;
 ---
 
 <!doctype html>
 <html>
     <head>
-        <Layout title={`Blogs and News - Page ${page.currentPage}`} />
+        <Layout title={`#${tag} - Articles - Page ${page.currentPage}`} />
     </head>
     <body>
         <Nav />
@@ -39,77 +63,21 @@ const pageTags = Array.from(
                 class="row"
                 style="background-color: white; padding-bottom: 30px;"
             >
-                <div
-                    class="col-lg-3 col-sm-12"
-                    style="padding: 50px 20px 20px 20px;"
-                >
-                    <div
-                        style="border: 2px solid lightgrey; padding: 15px; border-radius: 5px;"
-                    >
-                        <h3 style="padding-bottom: 0; padding-left: 5px;">
-                            Search Articles
-                        </h3>
-                        <form action="/article/search" method="get">
-                            <input
-                                class="col-12 filterItem"
-                                type="text"
-                                id="search"
-                                name="q"
-                                placeholder="search blog titles"
-                            />
-                            <input
-                                class="col-12 filterItem"
-                                type="text"
-                                id="author"
-                                name="author"
-                                placeholder="search for authors"
-                            />
-                            <input
-                                class="col-12 filterItem"
-                                type="text"
-                                id="tags"
-                                name="tags"
-                                placeholder="search tags (comma separated)"
-                            />
-                            <br />
-                            <br />
-                            <button class="col-12" id="submitSearch"
-                                >submit search</button
-                            >
-                        </form>
-                    </div>
-                    <hr />
-                    {
-                        pageTags.length > 0 && (
-                            <div style="margin-top: 20px;">
-                                <h5 style="padding-bottom: 0; padding-left: 5px;">
-                                    view articles with similar tags
-                                </h5>
-                                <div class="tag-row">
-                                    {pageTags.map((t) => (
-                                        <a
-                                            href={`/article/tag/${t}/1`}
-                                            class="tag-pill"
-                                        >
-                                            {t}
-                                        </a>
-                                    ))}
-                                </div>
-                            </div>
-                        )
-                    }
-                </div>
-                <div class="col-lg-9 col-sm-12">
+                <div class="col-12" style="padding: 50px 20px 20px 20px;">
                     <div class="col-12 headerTitle">
                         <h6 style="color: #000957;"><b>POLARIS Articles</b></h6>
-                        <h1><b>ARTICLES</b></h1>
+                        <h1><b>#{tag}</b></h1>
                         <p class="headerText col-lg-9 col-sm-12">
-                            Interested in astronomy and Space? Read our
-                            community written articles. Scroll chronologically
-                            or use the search feature to filter through post
-                            titles and authors.
+                            {page.total} post{page.total === 1 ? "" : "s"} tagged
+                            "{tag}".
                         </p>
+                        <a
+                            href="/article/1"
+                            style="color: #000957; text-decoration: underline;"
+                            >&larr; Back to all articles</a
+                        >
                     </div>
+
                     {
                         page.data.map((i) => (
                             <Little>
@@ -197,7 +165,7 @@ const pageTags = Array.from(
     </body>
 </html>
 
-<style is:global>
+<style>
     .pagination-controls {
         display: flex;
         justify-content: space-between;
@@ -214,7 +182,6 @@ const pageTags = Array.from(
             sans-serif;
     }
 
-    /* Target both links and spans using the class */
     .pagination-controls .page-btn {
         padding: 0.5rem 1rem;
         border-radius: 6px;
@@ -227,14 +194,12 @@ const pageTags = Array.from(
         transition: all 0.2s ease;
     }
 
-    /* Interactive hover state for active page links */
     .pagination-controls a.page-btn:hover {
         background-color: rgba(255, 255, 255, 0.25);
         border-color: rgba(255, 255, 255, 0.4);
         color: #ffffff;
     }
 
-    /* Muted styling for inactive buttons */
     .pagination-controls .page-btn.disabled {
         opacity: 0.35;
         cursor: not-allowed;
@@ -246,13 +211,6 @@ const pageTags = Array.from(
         color: #e2e8f0;
         font-size: 0.95rem;
         font-weight: 500;
-    }
-
-    .filterItem {
-        padding: 10px;
-        border-radius: 50px;
-        border: 2px solid grey;
-        margin-bottom: 5px;
     }
 
     .tag-row {
@@ -276,32 +234,7 @@ const pageTags = Array.from(
         background-color: #dde1f5;
     }
 
-    .headerTitle {
-        padding-top: 50px !important;
-    }
-
-    .headerText {
-        font-size: 20px !important;
-    }
-
-    #submitSearch {
-        padding: 10px;
-        background-color: #000957;
-        color: white;
-        border: none;
-        border-radius: 5px;
-    }
-
     @media only screen and (max-width: 800px) {
-        .headerTitle {
-            padding-top: 10px !important;
-            padding-left: 10px;
-        }
-
-        .headerText {
-            font-size: 16px !important;
-        }
-
         .redPBtn {
             display: flex;
             justify-content: flex-end;

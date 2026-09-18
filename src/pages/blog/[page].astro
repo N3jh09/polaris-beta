@@ -16,8 +16,41 @@ export const getStaticPaths = (async ({ paginate }) => {
             new Date(a.data.pubDate).getTime(),
     );
 
-    return paginate(posts, { pageSize: 10 });
+    return paginate(posts, { pageSize: 5 });
 }) satisfies GetStaticPaths;
+
+// AUTHORS
+// Define the TypeScript interface for your JSON structure
+interface AuthorData {
+    authors: string[];
+}
+
+// 1. Eagerly load all matching JSON files at build time
+const jsonFiles = import.meta.glob<AuthorData>(
+    "/src/data/authors/authors-*.json",
+    {
+        eager: true,
+        import: "default",
+    },
+);
+
+// 2. Set the target year
+const currentYear = new Date().getFullYear();
+
+// 3. Extract, sort, and find the most recent available year <= currentYear
+const availableYears = Object.keys(jsonFiles)
+    .map((path) => {
+        const match = path.match(/authors-(\d{4})\.json$/);
+        return match ? parseInt(match[1], 10) : null;
+    })
+    .filter((year): year is number => year !== null && year <= currentYear)
+    .sort((a, b) => b - a); // Sort descending to get the newest year first
+
+// 4. Retrieve authors from the target/fallback year
+const targetYear = availableYears[0];
+const selectedPath = `/src/data/authors/authors-${targetYear}.json`;
+const authorData = targetYear ? jsonFiles[selectedPath] : null;
+const authorsList = authorData?.authors ?? [];
 
 const { page } = Astro.props;
 ---
@@ -30,23 +63,110 @@ const { page } = Astro.props;
     <body>
         <Nav />
         <div class="container-fluid">
-            {
-                page.data.map((i) => (
-                    <Little>
-                        <a href={`/blog/${i.id}`}>
-                            <h3>{i.data.title}</h3>
-                        </a>
-                        {i.data.desc}
-                        <p style="color: #6b6b6b">
-                            {new Date(i.data.pubDate).toLocaleString("en-US", {
-                                month: "long",
-                                day: "numeric",
-                                year: "numeric",
-                            })}
+            <div
+                class="row"
+                style="background-color: white; padding-bottom: 30px;"
+            >
+                <div
+                    class="col-lg-3 col-sm-12"
+                    style="padding: 50px 20px 20px 20px;"
+                >
+                    <div
+                        style="border: 2px solid lightgrey; padding: 15px; border-radius: 5px;"
+                    >
+                        <h3 style="padding-bottom: 0; padding-left: 5px;">
+                            Search Blogs
+                        </h3>
+                        <form action="/blog/search" method="get">
+                            <input
+                                class="col-12 filterItem"
+                                type="text"
+                                id="search"
+                                name="q"
+                                placeholder="search blog titles"
+                            />
+                            <select
+                                class="col-12 filterItem"
+                                id="author"
+                                name="author"
+                            >
+                                <option value="" selected style="color: grey;"
+                                    >search for author</option
+                                >
+                                {
+                                    authorsList.length === 0 ? (
+                                        <option value="" disabled selected>
+                                            No authors found
+                                        </option>
+                                    ) : (
+                                        authorsList.map((author) => (
+                                            <option value={author}>
+                                                {author}
+                                            </option>
+                                        ))
+                                    )
+                                }
+                            </select>
+                            <br />
+                            <br />
+                            <button class="col-12" id="submitSearch"
+                                >submit search</button
+                            >
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-9 col-sm-12">
+                    <div class="col-12 headerTitle">
+                        <h6 style="color: #000957;"><b>POLARIS Blogs</b></h6>
+                        <h1><b>BLOGS AND NEWS</b></h1>
+                        <p class="headerText col-lg-9 col-sm-12">
+                            Read our latest events and activities hosted by our
+                            community. Or scroll through past news, updates, and
+                            official posts. Scroll chronologically or use the
+                            search feature to filter through post titles and
+                            authors.
                         </p>
-                    </Little>
-                ))
-            }
+                    </div>
+                    {
+                        page.data.map((i) => (
+                            <Little>
+                                <a
+                                    class="col-12"
+                                    href={`/blog/${i.id}`}
+                                    style="color: #000957; text-decoration: none;"
+                                >
+                                    <h3>{i.data.title}</h3>
+                                </a>
+                                <div
+                                    class="col-lg-10 col-sm-12"
+                                    style="padding-bottom: 10px; margin-top: -5px;"
+                                >
+                                    <p style="color: #adadad; margin-bottom: 0;">
+                                        by {i.data.author}・
+                                        {new Date(
+                                            i.data.pubDate,
+                                        ).toLocaleString("en-US", {
+                                            month: "2-digit",
+                                            day: "2-digit",
+                                            year: "numeric",
+                                        })}
+                                    </p>
+                                    {i.data.desc}
+                                </div>
+
+                                <div class="col-lg-2 col-sm-12 redPBtn">
+                                    <a
+                                        href={`/blog/${i.id}`}
+                                        style="padding: 10px; background-color: #000957; color: white; text-decoration: none; border-radius: 5px;"
+                                    >
+                                        Read Post
+                                    </a>
+                                </div>
+                            </Little>
+                        ))
+                    }
+                </div>
+            </div>
         </div>
 
         <!-- Pagination Controls -->
@@ -82,7 +202,7 @@ const { page } = Astro.props;
     </body>
 </html>
 
-<style>
+<style is:global>
     .pagination-controls {
         display: flex;
         justify-content: space-between;
@@ -131,5 +251,45 @@ const { page } = Astro.props;
         color: #e2e8f0;
         font-size: 0.95rem;
         font-weight: 500;
+    }
+
+    .filterItem {
+        padding: 10px;
+        border-radius: 50px;
+        border: 2px solid grey;
+        margin-bottom: 5px;
+    }
+
+    .headerTitle {
+        padding-top: 50px !important;
+    }
+
+    .headerText {
+        font-size: 20px !important;
+    }
+
+    #submitSearch {
+        padding: 10px;
+        background-color: #000957;
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+
+    @media only screen and (max-width: 800px) {
+        .headerTitle {
+            padding-top: 10px !important;
+            padding-left: 10px;
+        }
+
+        .headerText {
+            font-size: 16px !important;
+        }
+
+        .redPBtn {
+            display: flex;
+            justify-content: flex-end;
+            font-size: 14px;
+        }
     }
 </style>

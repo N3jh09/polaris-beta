@@ -1,6 +1,19 @@
 ---
+import { getCollection } from "astro:content";
+
 import Layout from "../components/global.astro";
 import Nav from "../components/nav.astro";
+
+export const prerender = true;
+
+// 1. Fetch, sort by newest, and limit to 3 items
+const posts = (await getCollection("blog"))
+	.sort(
+		(a, b) =>
+			new Date(b.data.pubDate).getTime() -
+			new Date(a.data.pubDate).getTime(),
+	)
+	.slice(0, 3);
 ---
 
 <!doctype html>
@@ -122,36 +135,49 @@ import Nav from "../components/nav.astro";
 							</h3>
 						</div>
 						<div class="col-sm-12" style="margin-top: 0;">
-							<div
-								class="row"
-								style="padding: 2px 12px 2px 12px; height: 80px;"
-							>
-								<div
-									class="card newsMain"
-									style="border-radius: 2rem 2rem 0 0;"
-								>
-									<div class="card-body">Basic card</div>
-								</div>
-							</div>
-							<div
-								class="row"
-								style="padding: 2px 12px 2px 12px; height: 80px;"
-							>
-								<div class="card newsMain">
-									<div class="card-body">Basic card</div>
-								</div>
-							</div>
-							<div
-								class="row"
-								style="padding: 2px 12px 2px 12px; height: 80px;"
-							>
-								<div
-									class="card newsMain"
-									style="border-radius: 0 0 2rem 2rem;"
-								>
-									<div class="card-body">Basic card</div>
-								</div>
-							</div>
+							{
+								posts.map((post, index) => {
+									let positionClass = "";
+									if (index === 0) {
+										positionClass =
+											"border-radius: 2rem 2rem 0 0;";
+									} else if (index === 1) {
+										positionClass = "";
+									} else if (index === 2) {
+										positionClass =
+											"border-radius: 0 0 2rem 2rem;";
+									}
+
+									return (
+										<div
+											class="row"
+											style="padding: 2px 12px 2px 12px; height: 80px;"
+										>
+											<div
+												class="card"
+												style={positionClass}
+											>
+												<div class="card-body">
+													<h5>
+														<b>
+															<a
+																style="margin: 0; color: #000957;"
+																href={`/blog/${post.id}`}
+															>
+																{
+																	post.data
+																		.title
+																}
+															</a>
+														</b>
+													</h5>
+													<p>{post.data.desc}</p>
+												</div>
+											</div>
+										</div>
+									);
+								})
+							}
 						</div>
 					</div>
 				</div>

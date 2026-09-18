@@ -80,6 +80,15 @@ const authorsList = authorData?.authors ?? [];
                         id="description"
                         placeholder="A short summary of the post..."
                         rows="2"></textarea>
+                    <label for="tags">Tags</label>
+                    <input
+                        class="col-12"
+                        type="text"
+                        name="tags"
+                        id="tags"
+                        placeholder="e.g. astronomy, black-holes, nasa (comma separated)"
+                    />
+                    <div id="tagPreview" class="tag-preview"></div>
                     <label for="keyCode">
                         <h5>Before you proceed...</h5>
                         Please enter the admin code. You will NOT be able to publish
@@ -104,7 +113,7 @@ const authorsList = authorData?.authors ?? [];
 
         <div class="container-fluid">
             <div class="editor-container">
-                <button id="publish-btn" type="button">Publish Blog</button>
+                <button id="publish-btn" type="button">Publish Article</button>
                 <p id="status-msg"></p>
             </div>
         </div><script
@@ -149,6 +158,30 @@ const authorsList = authorData?.authors ?? [];
                 return `${cleanTitle}-${dateStr}`;
             }
 
+            // Turn "Space, Black Holes,, NASA" into a clean, deduped array
+            // of lowercase, hyphen-free-but-trimmed tags: ["space", "black holes", "nasa"]
+            function parseTags(raw: string): string[] {
+                const seen = new Set<string>();
+                for (const part of raw.split(",")) {
+                    const tag = part.trim().toLowerCase();
+                    if (tag) seen.add(tag);
+                }
+                return Array.from(seen);
+            }
+
+            // Live pill preview so the author can see how tags will parse
+            const tagsInput = document.getElementById(
+                "tags",
+            ) as HTMLInputElement;
+            const tagPreview = document.getElementById("tagPreview");
+            tagsInput?.addEventListener("input", () => {
+                if (!tagPreview) return;
+                const tags = parseTags(tagsInput.value);
+                tagPreview.innerHTML = tags
+                    .map((t) => `<span class="tag-pill">${t}</span>`)
+                    .join("");
+            });
+
             publishBtn?.addEventListener("click", async () => {
                 if (!statusMsg) return;
 
@@ -163,6 +196,8 @@ const authorsList = authorData?.authors ?? [];
                         "description",
                     ) as HTMLTextAreaElement
                 ).value;
+
+                const tags = parseTags(tagsInput?.value ?? "");
 
                 // --- NEW: Grab the key from the keyCode input element ---
                 const keyCode = (
@@ -195,12 +230,17 @@ const authorsList = authorData?.authors ?? [];
                 );
 
                 // 4. Construct Markdown with Frontmatter YAML
+                const tagsYaml = `[${tags
+                    .map((t) => `"${t.replace(/"/g, '\\"')}"`)
+                    .join(", ")}]`;
+
                 const fullMarkdown = `---
 title: "${title.replace(/"/g, '\\"')}"
 author: "${author.replace(/"/g, '\\"')}"
 pubDate: ${pubDate}
 slug: "${slug}"
 desc: "${description.replace(/"/g, '\\"')}"
+tags: ${tagsYaml}
 ---
 
 ${bodyMarkdown}`;
@@ -258,6 +298,20 @@ ${bodyMarkdown}`;
     #editor {
         height: 300px;
         background: #fff;
+    }
+    .tag-preview {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin: 6px 0 10px;
+    }
+    .tag-pill {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 50px;
+        background-color: #eef0fa;
+        color: #000957;
+        font-size: 0.85rem;
     }
     button {
         padding: 0.8rem;

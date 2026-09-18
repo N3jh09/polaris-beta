@@ -1,0 +1,222 @@
+---
+import { getCollection } from "astro:content";
+
+import Layout from "../../components/global.astro";
+import Nav from "../../components/nav.astro";
+import Little from "../../components/blogLittle.astro";
+
+// This page reads query params at request time, so it can't be a
+// statically prerendered page — it needs to run per-request.
+export const prerender = false;
+
+const query = Astro.url.searchParams.get("q")?.trim() ?? "";
+const author = Astro.url.searchParams.get("author")?.trim() ?? "";
+
+const allPosts = await getCollection("blog");
+
+const results = allPosts
+    .filter((p) => {
+        const matchesTitle = query
+            ? p.data.title.toLowerCase().includes(query.toLowerCase())
+            : true;
+        const matchesAuthor = author ? p.data.author === author : true;
+        return matchesTitle && matchesAuthor;
+    })
+    .sort(
+        (a, b) =>
+            new Date(b.data.pubDate).getTime() -
+            new Date(a.data.pubDate).getTime(),
+    );
+
+// Manual pagination: search runs per-request (prerender = false), so we
+// can't use Astro's static paginate() helper here — we page the already
+// filtered/sorted results ourselves, driven by a `page` query param.
+const pageSize = 5;
+const totalResults = results.length;
+const lastPage = Math.max(1, Math.ceil(totalResults / pageSize));
+const requestedPage = parseInt(Astro.url.searchParams.get("page") ?? "1", 10);
+const currentPage = Math.min(
+    Math.max(Number.isNaN(requestedPage) ? 1 : requestedPage, 1),
+    lastPage,
+);
+const pagedResults = results.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize,
+);
+
+// Preserve q / author when linking to another page of results
+function buildPageUrl(targetPage: number): string {
+    const params = new URLSearchParams();
+    if (query) params.set("q", query);
+    if (author) params.set("author", author);
+    params.set("page", String(targetPage));
+    return `/blog/search?${params.toString()}`;
+}
+
+const prevUrl = currentPage > 1 ? buildPageUrl(currentPage - 1) : null;
+const nextUrl = currentPage < lastPage ? buildPageUrl(currentPage + 1) : null;
+---
+
+<!doctype html>
+<html>
+    <head>
+        <Layout title={`Search Results - Blogs and News`} />
+    </head>
+    <body>
+        <Nav />
+        <div class="container-fluid">
+            <div
+                class="row"
+                style="background-color: white; padding-bottom: 30px;"
+            >
+                <div class="col-12" style="padding: 50px 20px 20px 20px;">
+                    <div class="col-12 headerTitle">
+                        <h6 style="color: #000957;"><b>POLARIS Blogs</b></h6>
+                        <h1><b>SEARCH RESULTS</b></h1>
+                        <p class="headerText col-lg-9 col-sm-12">
+                            {
+                                totalResults === 0
+                                    ? "No posts matched your search."
+                                    : `Showing ${pagedResults.length} of ${totalResults} result${totalResults === 1 ? "" : "s"}${query ? ` for "${query}"` : ""}${author ? ` by ${author}` : ""}.`
+                            }
+                        </p>
+                        <a
+                            href="/blog/1"
+                            style="color: #000957; text-decoration: underline;"
+                            >&larr; Back to all posts</a
+                        >
+                    </div>
+
+                    {
+                        pagedResults.map((i) => (
+                            <Little>
+                                <a
+                                    class="col-12"
+                                    href={`/blog/${i.id}`}
+                                    style="color: #000957; text-decoration: none;"
+                                >
+                                    <h3>{i.data.title}</h3>
+                                </a>
+                                <div
+                                    class="col-lg-10 col-sm-12"
+                                    style="padding-bottom: 10px; margin-top: -5px;"
+                                >
+                                    <p style="color: #adadad; margin-bottom: 0;">
+                                        by {i.data.author}・
+                                        {new Date(
+                                            i.data.pubDate,
+                                        ).toLocaleString("en-US", {
+                                            month: "2-digit",
+                                            day: "2-digit",
+                                            year: "numeric",
+                                        })}
+                                    </p>
+                                    {i.data.desc}
+                                </div>
+
+                                <div class="col-lg-2 col-sm-12 redPBtn">
+                                    <a
+                                        href={`/blog/${i.id}`}
+                                        style="padding: 10px; background-color: #000957; color: white; text-decoration: none; border-radius: 5px;"
+                                    >
+                                        Read Post
+                                    </a>
+                                </div>
+                            </Little>
+                        ))
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination Controls -->
+        {
+            totalResults > 0 && (
+                <div class="container-fluid">
+                    <div class="row" style="background-color: #000957;">
+                        <nav class="pagination-controls">
+                            {prevUrl ? (
+                                <a href={prevUrl} class="page-btn">
+                                    &larr; Previous
+                                </a>
+                            ) : (
+                                <span class="page-btn disabled">
+                                    &larr; Previous
+                                </span>
+                            )}
+                            <span class="page-indicator">
+                                Page {currentPage} of {lastPage}
+                            </span>
+                            {nextUrl ? (
+                                <a href={nextUrl} class="page-btn">
+                                    Next &rarr;
+                                </a>
+                            ) : (
+                                <span class="page-btn disabled">
+                                    Next &rarr;
+                                </span>
+                            )}
+                        </nav>
+                    </div>
+                </div>
+            )
+        }
+    </body>
+</html>
+
+<style>
+    .pagination-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        font-family:
+            system-ui,
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            Roboto,
+            sans-serif;
+    }
+
+    .pagination-controls .page-btn {
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.9rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.2s ease;
+    }
+
+    .pagination-controls a.page-btn:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+        border-color: rgba(255, 255, 255, 0.4);
+        color: #ffffff;
+    }
+
+    .pagination-controls .page-btn.disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+        border-color: transparent;
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .pagination-controls .page-indicator {
+        color: #e2e8f0;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+
+    @media only screen and (max-width: 800px) {
+        .redPBtn {
+            display: flex;
+            justify-content: flex-end;
+            font-size: 14px;
+        }
+    }
+</style>

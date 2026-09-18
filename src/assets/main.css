@@ -40,8 +40,12 @@ body {
   color: white !important;
 }
 
-.dropdown {
-  display: none;
+.navbar-dark .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.post-content {
+  font-size: 20px !important;
 }
 
 @media only screen and (max-width: 800px) {
@@ -51,14 +55,6 @@ body {
 
   .navbar-nav {
     width: 100%;
-  }
-
-  .navbar-nav>.nav-item {
-    display: none;
-  }
-
-  .dropdown {
-    display: block !important;
   }
 
   #title {
@@ -73,5 +69,9 @@ body {
   #col2Main {
     border-radius: 45px;
     margin-bottom: 20px;
+  }
+
+  .post-content {
+    font-size: 16px !important;
   }
 }

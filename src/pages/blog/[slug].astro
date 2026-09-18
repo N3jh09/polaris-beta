@@ -16,28 +16,127 @@ interface Props {
     post: CollectionEntry<"blog">;
 }
 
+// AUTHORS
+// Define the TypeScript interface for your JSON structure
+interface AuthorData {
+    authors: string[];
+}
+
+// 1. Eagerly load all matching JSON files at build time
+const jsonFiles = import.meta.glob<AuthorData>(
+    "/src/data/authors/authors-*.json",
+    {
+        eager: true,
+        import: "default",
+    },
+);
+
+// 2. Set the target year
+const currentYear = new Date().getFullYear();
+
+// 3. Extract, sort, and find the most recent available year <= currentYear
+const availableYears = Object.keys(jsonFiles)
+    .map((path) => {
+        const match = path.match(/authors-(\d{4})\.json$/);
+        return match ? parseInt(match[1], 10) : null;
+    })
+    .filter((year): year is number => year !== null && year <= currentYear)
+    .sort((a, b) => b - a); // Sort descending to get the newest year first
+
+// 4. Retrieve authors from the target/fallback year
+const targetYear = availableYears[0];
+const selectedPath = `/src/data/authors/authors-${targetYear}.json`;
+const authorData = targetYear ? jsonFiles[selectedPath] : null;
+const authorsList = authorData?.authors ?? [];
+
 const { post } = Astro.props;
 const { Content } = await render(post);
 ---
 
 <BaseLayout title={post.data.title}>
-    <a href="/blogs" style="text-decoration: none; color:gray;">Go back</a>
-    <br />
-    <h6 style="color: #000957;"><b>POLARIS Blogs</b></h6>
-    <h1 class="col-lg-8 col-sm-12"><b>{post.data.title}</b></h1>
-    <p style="color: grey;">
-        | uploaded on {
-            new Date(post.data.pubDate)
-                .toLocaleString("en-US", {
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric",
-                })
-                .toLocaleLowerCase()
-        } ・ written by {post.data.author.toLowerCase()}
-    </p>
-    <br />
-    <div class="col-lg-6 col-sm-12">
-        <Content />
+    <div class="row">
+        <div class="col-lg-9 col-sm-12">
+            <a href="/blogs" style="text-decoration: none; color:gray;"
+                >Go back</a
+            >
+            <br />
+            <h6 style="color: #000957;"><b>POLARIS Blogs</b></h6>
+            <h1 class="col-lg-8 col-sm-12"><b>{post.data.title}</b></h1>
+            <p style="color: grey;">
+                | uploaded on {
+                    new Date(post.data.pubDate)
+                        .toLocaleString("en-US", {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                        })
+                        .toLocaleLowerCase()
+                } ・ written by {post.data.author.toLowerCase()}
+            </p>
+            <br />
+            <div class="col-lg-9 col-sm-12 post-content">
+                <Content />
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-12" style="padding-top: 50px;">
+            <div
+                style="border: 2px solid lightgrey; padding: 15px; border-radius: 5px;"
+            >
+                <h5 style="padding-bottom: 0; padding-left: 5px;">
+                    search more blogs and news
+                </h5>
+                <form action="/blog/search" method="get">
+                    <input
+                        class="col-12 filterItem"
+                        type="text"
+                        id="search"
+                        name="q"
+                        placeholder="search blogs"
+                    />
+                    <select class="col-12 filterItem" id="author" name="author">
+                        <option
+                            value=""
+                            selected
+                            disabled
+                            hidden
+                            style="color: grey;">search authors</option
+                        >
+                        {
+                            authorsList.length === 0 ? (
+                                <option value="" disabled selected>
+                                    No authors found
+                                </option>
+                            ) : (
+                                authorsList.map((author) => (
+                                    <option value={author}>{author}</option>
+                                ))
+                            )
+                        }
+                    </select>
+                    <br />
+                    <br />
+                    <button class="col-12" id="submitSearch"
+                        >submit search</button
+                    >
+                </form>
+            </div>
+        </div>
     </div>
 </BaseLayout>
+
+<style>
+    .filterItem {
+        padding: 10px;
+        border-radius: 50px;
+        border: 2px solid grey;
+        margin-bottom: 5px;
+    }
+
+    #submitSearch {
+        padding: 10px;
+        background-color: #000957;
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+</style>
