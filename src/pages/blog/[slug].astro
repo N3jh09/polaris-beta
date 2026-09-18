@@ -21,7 +21,23 @@ const { Content } = await render(post);
 ---
 
 <BaseLayout title={post.data.title}>
-    <h1>{post.data.title}</h1>
-    <p>{post.data.desc}</p>
-    <Content />
+    <a href="/blogs" style="text-decoration: none; color:gray;">Go back</a>
+    <br />
+    <h6 style="color: #000957;"><b>POLARIS Blogs</b></h6>
+    <h1 class="col-lg-8 col-sm-12"><b>{post.data.title}</b></h1>
+    <p style="color: grey;">
+        | uploaded on {
+            new Date(post.data.pubDate)
+                .toLocaleString("en-US", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                })
+                .toLocaleLowerCase()
+        } ・ written by {post.data.author.toLowerCase()}
+    </p>
+    <br />
+    <div class="col-lg-6 col-sm-12">
+        <Content />
+    </div>
 </BaseLayout>

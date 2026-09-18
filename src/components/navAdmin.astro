@@ -8,7 +8,7 @@ import "../assets/main.css";
         <a
             style="cursor: default; color: white; font-family: 'Sansation', sans-serif;"
             class="navbar-brand"
-            href="#">POLARIS</a
+            href="#">POLARIS Admin</a
         >
         <!-- Links -->
         <ul class="navbar-nav">
@@ -43,40 +43,6 @@ import "../assets/main.css";
                         : "text nav-link"}
                     href="/articles">Articles</a
                 >
-            </li>
-            <li class="dropdown ms-auto">
-                <a
-                    class="nav-link dropdown-toggle"
-                    href="#"
-                    role="button"
-                    data-bs-toggle="dropdown">Navigate to</a
-                >
-                <ul class="dropdown-menu" style="background-color: #000957;">
-                    <a
-                        class={currentPath === "/"
-                            ? "active text dropdown-item"
-                            : "text dropdown-item"}
-                        href="/">Home</a
-                    >
-                    <a
-                        class={currentPath === "/about"
-                            ? "active text dropdown-item"
-                            : "text dropdown-item"}
-                        href="/about">About</a
-                    >
-                    <a
-                        class={currentPath === "/blogs"
-                            ? "active text dropdown-item"
-                            : "text dropdown-item"}
-                        href="/blogs">Blogs and News</a
-                    >
-                    <a
-                        class={currentPath === "/articles"
-                            ? "active text dropdown-item"
-                            : "text dropdown-item"}
-                        href="/articles">Articles</a
-                    >
-                </ul>
             </li>
         </ul>
     </div>

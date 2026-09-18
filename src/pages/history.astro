@@ -70,35 +70,17 @@ const categorizeMembers = (rawData: any) => {
     </head>
 
     <body>
-        <Nav />
-
-        <!-- Hero Container -->
-        <div class="container-fluid px-4 mt-4" style="background-color: #EBE645;">
-            <div class="row align-items-center">
-                <div class="col-lg-4 col-md-12 d-flex flex-column justify-content-center mb-4 mb-lg-0">
-                    <h1 style="margin: 0; font-size: 5.2rem; font-family: 'Sansation', sans-serif !important; font-weight: 700 !important;">
-                        TIMELINE
-                    </h1>
-                    <p style="margin: 1rem 0; font-size: 1.4rem; font-family: 'Sansation', sans-serif;">
-                        Explore the rich history of Polaris Northern Stars members through the years!
-                    </p>
-                </div>
-                <div class="col-lg-8 col-md-12 d-flex flex-column justify-content-center" style="background-color: #000957; min-height: 450px;"></div>
-            </div>
-        </div>
-
-        <br />
-
-        <!-- TIMELINE LOOP -->
-        <div class="container-fluid" style="background-color: #000957;">
-            <div class="row">
+        <Nav /> <br>
+        <div class="row">
                 <div class="col-12" style="padding: 50px 0 0 20px;">
                     <h1 style="color: white; font-family: 'Sansation', sans-serif; font-weight: 700;">
-                        MEMBER ARCHIVE TIMELINE
+                        MEMBER ARCHIVE
                     </h1>
                 </div>
             </div>
 
+        <!-- TIMELINE LOOP -->
+        <div class="container-fluid" style="background-color: #000957; padding-top: 1px;">
             {
                 availableYears.map((year) => {
                     const fileKey = Object.keys(memberFiles).find((path) =>
@@ -108,7 +90,7 @@ const categorizeMembers = (rawData: any) => {
                     const { execMembers, otherOfficers, leads, regularMembers } = categorizeMembers(rawData);
 
                     return (
-                        <div class="year-block my-5 border-bottom border-light pb-4">
+                        <div class="year-block my-5 pb-4">
                             <!-- Year Header -->
                             <div class="row px-3" style="padding: 0;">
                                 <div class="col-12" style="padding: 0px !important;">
@@ -175,6 +157,7 @@ const categorizeMembers = (rawData: any) => {
                                 </div>
                             </div>
                         </div>
+                        <hr class="border-secondary" />
                     );
                 })
             }
