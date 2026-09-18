@@ -34,7 +34,7 @@ const { page } = Astro.props;
                 page.data.map((i) => (
                     <Little>
                         <a href={`/article/${i.id}`}>
-                            <h3>{i.data.title}</h3>
+                            <h4>{i.data.title}</h4>
                         </a>
                         {i.data.desc}
                         <p style="color: #6b6b6b">
@@ -43,7 +43,6 @@ const { page } = Astro.props;
                                 day: "numeric",
                                 year: "numeric",
                             })}
-                            , by {i.data.author}
                         </p>
                     </Little>
                 ))

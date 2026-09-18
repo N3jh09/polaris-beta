@@ -4,14 +4,17 @@ import { env } from 'cloudflare:workers';
 
 export const POST: APIRoute = async ({ request }) => {
     try {
+        const ADMIN_ARTICLEKEY = (env as any).ADMIN_ARTICLEKEY || import.meta.env.ADMIN_ARTICLEKEY;
+        const ADMIN_BLOGKEY = (env as any).ADMIN_BLOGKEY || import.meta.env.ADMIN_BLOGKEY;
         const GITHUB_TOKEN = (env as any).GITHUB_TOKEN || import.meta.env.GITHUB_TOKEN;
         const GITHUB_REPO = (env as any).GITHUB_REPO || import.meta.env.GITHUB_REPO;
         const GITHUB_BRANCH = (env as any).GITHUB_BRANCH || import.meta.env.GITHUB_BRANCH || 'main';
 
-        const { slug, content, type = 'blog' } = (await request.json()) as {
+        const { slug, content, type = 'blog', key } = (await request.json()) as {
             slug: string;
             content: string;
             type?: 'blog' | 'article';
+            key?: string; // Add key to the payload definition
         };
 
         if (!slug || !content) {
@@ -20,6 +23,17 @@ export const POST: APIRoute = async ({ request }) => {
                 { status: 400, headers: { 'Content-Type': 'application/json' } }
             );
         }
+
+        // --- NEW: API Key Verification ---
+        const expectedKey = type === 'article' ? ADMIN_ARTICLEKEY : ADMIN_BLOGKEY;
+
+        if (!expectedKey || key !== expectedKey) {
+            return new Response(
+                JSON.stringify({ message: 'Unauthorized: Invalid or missing API key.' }),
+                { status: 401, headers: { 'Content-Type': 'application/json' } }
+            );
+        }
+        // ---------------------------------
 
         if (!GITHUB_TOKEN || !GITHUB_REPO) {
             return new Response(

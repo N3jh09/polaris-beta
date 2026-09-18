@@ -54,10 +54,10 @@ const authorsList = authorData?.authors ?? [];
     </head>
     <body style="background: white;">
         <Nav />
-
-        <div class="container-fluid">
-            <div class="row">
+        <div class="container-fluid" style="margin-top: 50px;">
+            <div class="row justify-content-center">
                 <div class="col-lg-4 col-sm-12">
+                    <h3 class="col-12">Post Details</h3>
                     <input
                         class="col-12"
                         type="text"
@@ -85,100 +85,130 @@ const authorsList = authorData?.authors ?? [];
                             )
                         }
                     </select>
+                    <br /><br />
+                    <label for="description">Post Description</label>
+                    <textarea
+                        class="col-12"
+                        name="description"
+                        id="description"
+                        placeholder="A short summary of the post..."
+                        rows="2"></textarea>
+                    <label for="keyCode">
+                        <h5>Before you proceed...</h5>
+                        Please enter the admin code. You will NOT be able to publish
+                        this post without a correct and valid code.
+                    </label>
+                    <input
+                        class="col-12"
+                        type="text"
+                        name="keyCode"
+                        id="keyCode"
+                        placeholder="**Insert Admin Key Here"
+                        required
+                    />
+                    <br /><br /><br />
                 </div>
-
-                <textarea
-                    class="col-lg-8 col-sm-12"
-                    id="description"
-                    placeholder="A short summary of the post..."
-                    rows="2"></textarea>
-            </div>
-            <div class="row form-group">
-                <label></label>
-                <div id="editor"></div>
+                <div class="col-lg-6 col-sm-12">
+                    <h3 class="col-12">Post Content</h3>
+                    <div id="editor"></div>
+                </div>
             </div>
         </div>
 
-        <div class="editor-container">
-            <input
-                class="col-12"
-                type="text"
-                id="keyCode"
-                placeholder="**Insert Admin Key Here"
-                required
-            />
-            <button id="publish-btn" type="button">Publish Blog</button>
-            <p id="status-msg"></p>
-        </div>
-    </body><script is:inline src="https://unpkg.com/turndown/dist/turndown.js"
-    ></script>
-    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"
-    ></script>
-    <script>
-        declare const TurndownService: any;
-        import Quill from "quill";
-        import "quill/dist/quill.snow.css";
+        <div class="container-fluid">
+            <div class="editor-container">
+                <button id="publish-btn" type="button">Publish Blog</button>
+                <p id="status-msg"></p>
+            </div>
+        </div><script
+            is:inline
+            src="https://unpkg.com/turndown/dist/turndown.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"
+        ></script>
+        <script is:inline src="https://unpkg.com/turndown/dist/turndown.js"
+        ></script>
+        <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"
+        ></script>
+        <script>
+            declare const TurndownService: any;
+            import Quill from "quill";
+            import "quill/dist/quill.snow.css";
 
-        const toolbarOptions = [
-            [{ header: 1 }, { header: 2 }],
-            [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
-            ["bold", "italic", "blockquote", "link", "image"],
-        ];
+            const toolbarOptions = [
+                [{ header: 1 }, { header: 2 }],
+                [{ list: "ordered" }, { list: "bullet" }],
+                ["bold", "italic", "blockquote", "link", "image"],
+            ];
 
-        const turndownService = new TurndownService();
-        const quill = new Quill("#editor", {
-            modules: {
-                toolbar: toolbarOptions,
-            },
-            theme: "snow",
-        });
+            const turndownService = new TurndownService();
+            const quill = new Quill("#editor", {
+                modules: {
+                    toolbar: toolbarOptions,
+                },
+                theme: "snow",
+            });
 
-        const publishBtn = document.getElementById("publish-btn");
-        const statusMsg = document.getElementById("status-msg");
+            const publishBtn = document.getElementById("publish-btn");
+            const statusMsg = document.getElementById("status-msg");
 
-        // Slug generator helper
-        function generateSlug(title: string, dateStr: string): string {
-            const cleanTitle = title
-                .toLowerCase()
-                .trim()
-                .replace(/[^\w\s-]/g, "") // Remove special characters
-                .replace(/\s+/g, "-"); // Replace spaces with '-'
+            // Slug generator helper
+            function generateSlug(title: string, dateStr: string): string {
+                const cleanTitle = title
+                    .toLowerCase()
+                    .trim()
+                    .replace(/[^\w\s-]/g, "") // Remove special characters
+                    .replace(/\s+/g, "-"); // Replace spaces with '-'
 
-            return `${cleanTitle}-${dateStr}`;
-        }
-
-        publishBtn?.addEventListener("click", async () => {
-            if (!statusMsg) return;
-
-            const title = (document.getElementById("title") as HTMLInputElement)
-                .value;
-            const author = (
-                document.getElementById("author") as HTMLInputElement
-            ).value;
-            const description = (
-                document.getElementById("description") as HTMLTextAreaElement
-            ).value;
-
-            if (!title || !author) {
-                statusMsg.innerText =
-                    "Please provide both a Title and an Author.";
-                return;
+                return `${cleanTitle}-${dateStr}`;
             }
 
-            statusMsg.innerText = "Publishing...";
+            publishBtn?.addEventListener("click", async () => {
+                if (!statusMsg) return;
 
-            // 1. Auto-generate Date (YYYY-MM-DD)
-            const now = new Date();
-            const pubDate = now.toISOString().split("T")[0];
+                const title = (
+                    document.getElementById("title") as HTMLInputElement
+                ).value;
+                const author = (
+                    document.getElementById("author") as HTMLInputElement
+                ).value;
+                const description = (
+                    document.getElementById(
+                        "description",
+                    ) as HTMLTextAreaElement
+                ).value;
 
-            // 2. Auto-generate Slug (title-formatted-YYYY-MM-DD)
-            const slug = generateSlug(title, pubDate);
+                // --- NEW: Grab the key from the keyCode input element ---
+                const keyCode = (
+                    document.getElementById("keyCode") as HTMLInputElement
+                ).value;
 
-            // 3. Convert Quill HTML to Markdown
-            const bodyMarkdown = turndownService.turndown(quill.root.innerHTML);
+                if (!title || !author) {
+                    statusMsg.innerText =
+                        "Please provide both a Title and an Author.";
+                    return;
+                }
 
-            // 4. Construct Markdown with Frontmatter YAML
-            const fullMarkdown = `---
+                if (!keyCode) {
+                    statusMsg.innerText = "Please provide the admin key.";
+                    return;
+                }
+
+                statusMsg.innerText = "Publishing...";
+
+                // 1. Auto-generate Date (YYYY-MM-DD)
+                const now = new Date();
+                const pubDate = now.toISOString().split("T")[0];
+
+                // 2. Auto-generate Slug (title-formatted-YYYY-MM-DD)
+                const slug = generateSlug(title, pubDate);
+
+                // 3. Convert Quill HTML to Markdown
+                const bodyMarkdown = turndownService.turndown(
+                    quill.root.innerHTML,
+                );
+
+                // 4. Construct Markdown with Frontmatter YAML
+                const fullMarkdown = `---
 title: "${title.replace(/"/g, '\\"')}"
 author: "${author.replace(/"/g, '\\"')}"
 pubDate: ${pubDate}
@@ -188,31 +218,33 @@ desc: "${description.replace(/"/g, '\\"')}"
 
 ${bodyMarkdown}`;
 
-            // 5. Send payload to API endpoint
-            try {
-                const response = await fetch("/api/save-github", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        slug,
-                        content: fullMarkdown,
-                        type: "blog", // Specifies the destination subfolder
-                    }),
-                });
+                // 5. Send payload to API endpoint including the key
+                try {
+                    const response = await fetch("/api/save-github", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            slug,
+                            content: fullMarkdown,
+                            type: "blog", // Specifies the destination subfolder
+                            key: keyCode, // Pass the key to match backend verification
+                        }),
+                    });
 
-                const data = await response.json();
+                    const data = await response.json();
 
-                if (response.ok) {
-                    statusMsg.innerText = `Published successfully! File: ${slug}.md`;
-                } else {
-                    statusMsg.innerText = `Error: ${data.message}`;
+                    if (response.ok) {
+                        statusMsg.innerText = `Published successfully! File: ${slug}.md`;
+                    } else {
+                        statusMsg.innerText = `Error: ${data.message}`;
+                    }
+                } catch (err) {
+                    statusMsg.innerText =
+                        "Network error while attempting to publish.";
                 }
-            } catch (err) {
-                statusMsg.innerText =
-                    "Network error while attempting to publish.";
-            }
-        });
-    </script>
+            });
+        </script>
+    </body>
 </html>
 
 <style>
