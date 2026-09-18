@@ -35,54 +35,49 @@ const pageTags = Array.from(
     <body>
         <Nav />
         <div class="container-fluid">
-            <div
-                class="row"
-                style="background-color: white; padding-bottom: 30px;"
-            >
+            <div class="row" style="background-color: white;">
                 <div
                     class="col-lg-3 col-sm-12"
-                    style="padding: 50px 20px 20px 20px;"
+                    style="padding: 50px 20px 20px 20px; background-color: #191925;"
                 >
-                    <div
-                        style="border: 2px solid lightgrey; padding: 15px; border-radius: 5px;"
+                    <h3
+                        style="padding-bottom: 0; padding-left: 5px; color: white;"
                     >
-                        <h3 style="padding-bottom: 0; padding-left: 5px;">
-                            Search Articles
-                        </h3>
-                        <form action="/article/search" method="get">
-                            <input
-                                class="col-12 filterItem"
-                                type="text"
-                                id="search"
-                                name="q"
-                                placeholder="search blog titles"
-                            />
-                            <input
-                                class="col-12 filterItem"
-                                type="text"
-                                id="author"
-                                name="author"
-                                placeholder="search for authors"
-                            />
-                            <input
-                                class="col-12 filterItem"
-                                type="text"
-                                id="tags"
-                                name="tags"
-                                placeholder="search tags (comma separated)"
-                            />
-                            <br />
-                            <br />
-                            <button class="col-12" id="submitSearch"
-                                >submit search</button
-                            >
-                        </form>
-                    </div>
+                        Search Articles
+                    </h3>
+                    <form action="/article/search" method="get">
+                        <input
+                            class="col-12 filterItem"
+                            type="text"
+                            id="search"
+                            name="q"
+                            placeholder="search blog titles"
+                        />
+                        <input
+                            class="col-12 filterItem"
+                            type="text"
+                            id="author"
+                            name="author"
+                            placeholder="search for authors"
+                        />
+                        <input
+                            class="col-12 filterItem"
+                            type="text"
+                            id="tags"
+                            name="tags"
+                            placeholder="search tags (comma separated)"
+                        />
+                        <br />
+                        <br />
+                        <button class="col-12" id="submitSearch"
+                            >submit search</button
+                        >
+                    </form>
                     <hr />
                     {
                         pageTags.length > 0 && (
                             <div style="margin-top: 20px;">
-                                <h5 style="padding-bottom: 0; padding-left: 5px;">
+                                <h5 style="padding-bottom: 0; padding-left: 5px; color: #8686a6;">
                                     view articles with similar tags
                                 </h5>
                                 <div class="tag-row">
@@ -99,7 +94,10 @@ const pageTags = Array.from(
                         )
                     }
                 </div>
-                <div class="col-lg-9 col-sm-12">
+                <div
+                    class="col-lg-9 col-sm-12 contentBody"
+                    style="padding: 0 15px 30px 30px;"
+                >
                     <div class="col-12 headerTitle">
                         <h6 style="color: #000957;"><b>POLARIS Articles</b></h6>
                         <h1><b>ARTICLES</b></h1>
@@ -251,8 +249,19 @@ const pageTags = Array.from(
     .filterItem {
         padding: 10px;
         border-radius: 50px;
-        border: 2px solid grey;
+        border: 2px solid #474759;
         margin-bottom: 5px;
+        background-color: #474759;
+        color: white;
+    }
+
+    .filterItem::placeholder {
+        color: #8686a6;
+    }
+
+    .filterItem:focus {
+        border: 2px solid #8686a6;
+        outline: none;
     }
 
     .tag-row {
@@ -266,8 +275,8 @@ const pageTags = Array.from(
         display: inline-block;
         padding: 4px 12px;
         border-radius: 50px;
-        background-color: #eef0fa;
-        color: #000957;
+        background-color: #000957;
+        color: #afb6f7;
         font-size: 0.85rem;
         text-decoration: none;
     }
@@ -287,7 +296,7 @@ const pageTags = Array.from(
     #submitSearch {
         padding: 10px;
         background-color: #000957;
-        color: white;
+        color: #afb6f7;
         border: none;
         border-radius: 5px;
     }
@@ -306,6 +315,10 @@ const pageTags = Array.from(
             display: flex;
             justify-content: flex-end;
             font-size: 14px;
+        }
+
+        .contentBody {
+            padding: 50px 10px 30px 10px !important;
         }
     }
 </style>
