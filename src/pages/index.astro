@@ -92,7 +92,7 @@ const posts = (await getCollection("blog"))
 				<div
 					id="col2Main"
 					class="col-lg-8 col-md-12 d-flex flex-column justify-content-center"
-					style="background-color: #000957d8; min-height: 600px;"
+					style="background-color: #000957d8; min-height: 600px; padding-top: 15px; padding-bottom: 15px;"
 				>
 					<div class="row g-3">
 						<div class="col-sm-6" style="position: relative;">
@@ -151,7 +151,7 @@ const posts = (await getCollection("blog"))
 									return (
 										<div
 											class="row"
-											style="padding: 2px 12px 2px 12px; height: 80px;"
+											style="padding: 2px 12px 2px 12px; min-height: 60px;"
 										>
 											<div
 												class="card"
@@ -164,6 +164,18 @@ const posts = (await getCollection("blog"))
 																style="margin: 0; color: #000957;"
 																href={`/blog/${post.id}`}
 															>
+																{new Date(
+																	post.data
+																		.pubDate,
+																).toLocaleString(
+																	"en-US",
+																	{
+																		month: "2-digit",
+																		day: "2-digit",
+																		year: "numeric",
+																	},
+																)}
+																・
 																{
 																	post.data
 																		.title
@@ -171,7 +183,6 @@ const posts = (await getCollection("blog"))
 															</a>
 														</b>
 													</h5>
-													<p>{post.data.desc}</p>
 												</div>
 											</div>
 										</div>

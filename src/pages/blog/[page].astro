@@ -63,59 +63,55 @@ const { page } = Astro.props;
     <body>
         <Nav />
         <div class="container-fluid">
-            <div
-                class="row"
-                style="background-color: white; padding-bottom: 30px;"
-            >
+            <div class="row" style="background-color: white;">
                 <div
                     class="col-lg-3 col-sm-12"
-                    style="padding: 50px 20px 20px 20px;"
+                    style="padding: 50px 20px 20px 20px; background-color: #191925;"
                 >
-                    <div
-                        style="border: 2px solid lightgrey; padding: 15px; border-radius: 5px;"
+                    <h3
+                        style="padding-bottom: 0; padding-left: 5px; color: white;"
                     >
-                        <h3 style="padding-bottom: 0; padding-left: 5px;">
-                            Search Blogs
-                        </h3>
-                        <form action="/blog/search" method="get">
-                            <input
-                                class="col-12 filterItem"
-                                type="text"
-                                id="search"
-                                name="q"
-                                placeholder="search blog titles"
-                            />
-                            <select
-                                class="col-12 filterItem"
-                                id="author"
-                                name="author"
+                        Search Blogs
+                    </h3>
+                    <form action="/blog/search" method="get">
+                        <input
+                            class="col-12 filterItem"
+                            type="text"
+                            id="search"
+                            name="q"
+                            placeholder="search blog titles"
+                        />
+                        <select
+                            class="col-12 filterItem"
+                            id="author"
+                            name="author"
+                        >
+                            <option value="" selected style="color: grey;"
+                                >search for author</option
                             >
-                                <option value="" selected style="color: grey;"
-                                    >search for author</option
-                                >
-                                {
-                                    authorsList.length === 0 ? (
-                                        <option value="" disabled selected>
-                                            No authors found
-                                        </option>
-                                    ) : (
-                                        authorsList.map((author) => (
-                                            <option value={author}>
-                                                {author}
-                                            </option>
-                                        ))
-                                    )
-                                }
-                            </select>
-                            <br />
-                            <br />
-                            <button class="col-12" id="submitSearch"
-                                >submit search</button
-                            >
-                        </form>
-                    </div>
+                            {
+                                authorsList.length === 0 ? (
+                                    <option value="" disabled selected>
+                                        No authors found
+                                    </option>
+                                ) : (
+                                    authorsList.map((author) => (
+                                        <option value={author}>{author}</option>
+                                    ))
+                                )
+                            }
+                        </select>
+                        <br />
+                        <br />
+                        <button class="col-12" id="submitSearch"
+                            >submit search</button
+                        >
+                    </form>
                 </div>
-                <div class="col-lg-9 col-sm-12">
+                <div
+                    class="col-lg-9 col-sm-12 contentBody"
+                    style="padding: 0 15px 30px 30px;"
+                >
                     <div class="col-12 headerTitle">
                         <h6 style="color: #000957;"><b>POLARIS Blogs</b></h6>
                         <h1><b>BLOGS AND NEWS</b></h1>
@@ -256,8 +252,23 @@ const { page } = Astro.props;
     .filterItem {
         padding: 10px;
         border-radius: 50px;
-        border: 2px solid grey;
+        border: 2px solid #474759;
         margin-bottom: 5px;
+        background-color: #474759;
+        color: white;
+    }
+
+    .filterItem::placeholder {
+        color: #8686a6;
+    }
+
+    .filterItem:focus {
+        border: 2px solid #8686a6;
+        outline: none;
+    }
+
+    #author:has(option[value=""]:checked) {
+        color: #8686a6;
     }
 
     .headerTitle {
@@ -271,7 +282,7 @@ const { page } = Astro.props;
     #submitSearch {
         padding: 10px;
         background-color: #000957;
-        color: white;
+        color: #afb6f7;
         border: none;
         border-radius: 5px;
     }
@@ -290,6 +301,10 @@ const { page } = Astro.props;
             display: flex;
             justify-content: flex-end;
             font-size: 14px;
+        }
+
+        .contentBody {
+            padding: 50px 10px 30px 10px !important;
         }
     }
 </style>
