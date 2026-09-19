@@ -36,7 +36,7 @@ body {
   padding: 0;
   font-family: "Sansation", sans-serif;
 
-  background-image: url(../assets/bgland.png);
+  background-image: url(../assets/bgland.jpg);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -53,7 +53,7 @@ body {
 .bigBox {
   background: linear-gradient(45deg,
       #ffffff10, #ffffff4d, #ffffff6a);
-  border: solid 1px;
+  border: 1px solid !important;
 }
 
 .text {
@@ -71,7 +71,7 @@ body {
 
 @media only screen and (max-width: 800px) {
   body {
-    background-image: url(../assets/bgportrait.png);
+    background-image: url(../assets/bgportrait.jpeg);
   }
 
   .navbar-nav {

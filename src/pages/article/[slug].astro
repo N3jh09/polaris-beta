@@ -23,13 +23,17 @@ const { Content } = await render(post);
 <BaseLayout title={post.data.title}>
     <div class="row">
         <div class="col-lg-9 col-sm-12">
-            <a href="/articles" style="text-decoration: none; color:gray;"
+            <a
+                href="/articles"
+                style="text-decoration: none; color: var(--color-text-muted-1);"
                 >Go back</a
             >
             <br />
-            <h6 style="color: #000957;"><b>POLARIS Articles</b></h6>
+            <h6 style="color: var(--color-surface-alt-1);">
+                <b>POLARIS Articles</b>
+            </h6>
             <h1 class="col-lg-8 col-sm-12"><b>{post.data.title}</b></h1>
-            <p style="color: grey;">
+            <p style="color: var(--color-text-muted-1);">
                 | uploaded on {
                     new Date(post.data.pubDate)
                         .toLocaleString("en-US", {
@@ -58,18 +62,20 @@ const { Content } = await render(post);
         </div>
         <div class="col-lg-3 col-sm-12" style="padding-top: 50px;">
             <div
-                style="border: 2px solid lightgrey; padding: 15px; border-radius: 5px;"
+                style="border: 2px solid lightgrey; padding: 15px; border-radius: 5px; background-color: var(--color-surface-alt);"
             >
-                <h5 style="padding-bottom: 0; padding-left: 5px;">
+                <p
+                    style="padding-bottom: 0; color: var(--color-text-inverted);"
+                >
                     search more articles
-                </h5>
+                </p>
                 <form action="/article/search" method="get">
                     <input
                         class="col-12 filterItem"
                         type="text"
                         id="search"
                         name="q"
-                        placeholder="search blogs"
+                        placeholder="search articles"
                     />
                     <input
                         class="col-12 filterItem"
@@ -97,39 +103,63 @@ const { Content } = await render(post);
 </BaseLayout>
 
 <style>
+    .filterItem {
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid var(--color-border);
+        margin-bottom: 5px;
+        background-color: var(--color-surface-alt-1);
+        color: white;
+    }
+
+    .filterItem::placeholder {
+        color: var(--color-text-muted);
+    }
+
+    .filterItem:focus {
+        border: 2px solid var(--color-focus-ring);
+        outline: none;
+    }
+
     .tag-row {
         display: flex;
         flex-wrap: wrap;
         gap: 6px;
-        margin: 8px 0;
+        margin-top: 8px;
     }
 
     .tag-pill {
         display: inline-block;
         padding: 4px 12px;
         border-radius: 50px;
-        background-color: #eef0fa;
-        color: #000957;
+        background-color: var(--color-surface-alt);
+        color: var(--color-text-inverted);
         font-size: 0.85rem;
         text-decoration: none;
+        border: 1px solid var(--color-surface-alt-1);
     }
 
     .tag-pill:hover {
-        background-color: #dde1f5;
+        border: 1px solid var(--color-focus-ring);
     }
 
-    .filterItem {
-        padding: 10px;
-        border-radius: 50px;
-        border: 2px solid grey;
-        margin-bottom: 5px;
+    .headerTitle {
+        padding-top: 50px !important;
+    }
+
+    .headerText {
+        font-size: 20px !important;
     }
 
     #submitSearch {
         padding: 10px;
-        background-color: #000957;
-        color: white;
+        background-color: var(--color-accent);
+        color: var(--color-accent-text);
         border: none;
         border-radius: 5px;
+    }
+
+    #submitSearch:hover {
+        background-color: #da8d18;
     }
 </style>

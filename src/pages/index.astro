@@ -92,13 +92,13 @@ const posts = (await getCollection("blog"))
 				<div
 					id="col2Main"
 					class="col-lg-8 col-md-12 d-flex flex-column justify-content-center"
-					style="background-color: var(--color-surface-alt); min-height: 600px; padding-top: 15px; padding-bottom: 15px;"
+					style="background-color: #0f2242b5; min-height: 600px; padding-top: 15px; padding-bottom: 15px;"
 				>
 					<div class="row g-3">
 						<div class="col-sm-6" style="position: relative;">
 							<div
 								class="p-4 text-white rounded-5 h-100 bigBox"
-								style="position: relative; z-index: 2;"
+								style="position: relative; z-index: 2; border: none !important;"
 							>
 								<h4
 									style="font-family: 'Sansation', sans-serif; font-weight: 700;"
@@ -111,7 +111,7 @@ const posts = (await getCollection("blog"))
 						<div class="col-sm-6" style="position: relative;">
 							<div
 								class="p-4 text-white rounded-5 h-100 bigBox"
-								style="position: relative; z-index: 2;"
+								style="position: relative; z-index: 2; border: none !important;"
 							>
 								<h4
 									style="font-family: 'Sansation', sans-serif; font-weight: 700;"
@@ -154,11 +154,11 @@ const posts = (await getCollection("blog"))
 											style="padding: 2px 12px 2px 12px; min-height: 60px;"
 										>
 											<div
-												class="card"
+												class="card bigBox"
 												style={positionClass}
 											>
 												<div class="card-body">
-													<p style="font-size: 12px; margin-bottom: 0px; color: var(--color-text-muted-1);">
+													<p style="font-size: 12px; margin-bottom: 0px; color: var(--color-text-inverted);">
 														{new Date(
 															post.data.pubDate,
 														).toLocaleString(
@@ -173,7 +173,7 @@ const posts = (await getCollection("blog"))
 													<h5>
 														<b>
 															<a
-																style="margin: 0; color: var(--color-text);"
+																style="margin: 0; color: var(--color-text-inverted);"
 																href={`/blog/${post.id}`}
 															>
 																{

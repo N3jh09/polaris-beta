@@ -26,7 +26,9 @@ const results = allPosts
         const matchesTitle = query
             ? p.data.title.toLowerCase().includes(query.toLowerCase())
             : true;
-        const matchesAuthor = author ? p.data.author === author : true;
+        const matchesAuthor = author
+            ? p.data.author.toLowerCase().includes(author.toLowerCase())
+            : true;
         // Match if the post has ANY of the requested tags
         const postTags = (p.data.tags ?? []).map((t) => t.toLowerCase());
         const matchesTags =
@@ -74,7 +76,7 @@ const nextUrl = currentPage < lastPage ? buildPageUrl(currentPage + 1) : null;
 <!doctype html>
 <html>
     <head>
-        <Layout title={`Search Results - Blogs and News`} />
+        <Layout title={`Search Results - Articles`} />
     </head>
     <body>
         <Nav />
@@ -85,9 +87,14 @@ const nextUrl = currentPage < lastPage ? buildPageUrl(currentPage + 1) : null;
             >
                 <div class="col-12" style="padding: 50px 20px 20px 20px;">
                     <div class="col-12 headerTitle">
-                        <h6 style="color: #000957;"><b>POLARIS Blogs</b></h6>
+                        <h6 style="color: var(--color-surface-alt-1);">
+                            <b>POLARIS Articles</b>
+                        </h6>
                         <h1><b>SEARCH RESULTS</b></h1>
-                        <p class="headerText col-lg-9 col-sm-12">
+                        <p
+                            class="headerText col-lg-9 col-sm-12"
+                            style="color: var(--color-text-muted-1);"
+                        >
                             {
                                 totalResults === 0
                                     ? "No posts matched your search."
@@ -96,7 +103,7 @@ const nextUrl = currentPage < lastPage ? buildPageUrl(currentPage + 1) : null;
                         </p>
                         <a
                             href="/article/1"
-                            style="color: #000957; text-decoration: underline;"
+                            style="color: var(--color-text-muted-1); text-decoration: underline;"
                             >&larr; Back to all posts</a
                         >
                     </div>
@@ -107,7 +114,7 @@ const nextUrl = currentPage < lastPage ? buildPageUrl(currentPage + 1) : null;
                                 <a
                                     class="col-12"
                                     href={`/article/${i.id}`}
-                                    style="color: #000957; text-decoration: none;"
+                                    style="color: var(--color-text); text-decoration: none;"
                                 >
                                     <h3>{i.data.title}</h3>
                                 </a>
@@ -115,7 +122,7 @@ const nextUrl = currentPage < lastPage ? buildPageUrl(currentPage + 1) : null;
                                     class="col-lg-10 col-sm-12"
                                     style="padding-bottom: 10px; margin-top: -5px;"
                                 >
-                                    <p style="color: #adadad; margin-bottom: 0;">
+                                    <p style="color: var(--color-text-muted-1); margin-bottom: 0;">
                                         by {i.data.author}・
                                         {new Date(
                                             i.data.pubDate,
@@ -143,7 +150,7 @@ const nextUrl = currentPage < lastPage ? buildPageUrl(currentPage + 1) : null;
                                 <div class="col-lg-2 col-sm-12 redPBtn">
                                     <a
                                         href={`/article/${i.id}`}
-                                        style="padding: 10px; background-color: #000957; color: white; text-decoration: none; border-radius: 5px;"
+                                        style="padding: 10px; background-color: var(--color-text); color: white; text-decoration: none; border-radius: 5px;"
                                     >
                                         Read Post
                                     </a>
@@ -159,7 +166,10 @@ const nextUrl = currentPage < lastPage ? buildPageUrl(currentPage + 1) : null;
         {
             totalResults > 0 && (
                 <div class="container-fluid">
-                    <div class="row" style="background-color: #000957;">
+                    <div
+                        class="row"
+                        style="background-color: var(--color-surface-alt);"
+                    >
                         <nav class="pagination-controls">
                             {prevUrl ? (
                                 <a href={prevUrl} class="page-btn">
@@ -249,14 +259,15 @@ const nextUrl = currentPage < lastPage ? buildPageUrl(currentPage + 1) : null;
         display: inline-block;
         padding: 4px 12px;
         border-radius: 50px;
-        background-color: #eef0fa;
-        color: #000957;
+        background-color: var(--color-surface-alt);
+        color: var(--color-text-inverted);
         font-size: 0.85rem;
         text-decoration: none;
+        border: 1px solid var(--color-surface-alt-1);
     }
 
     .tag-pill:hover {
-        background-color: #dde1f5;
+        border: 1px solid var(--color-focus-ring);
     }
 
     @media only screen and (max-width: 800px) {
