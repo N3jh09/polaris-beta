@@ -105,7 +105,7 @@ const regularMembers = [...activeMembers]
                     <ul class="nav" style="margin-top: 10px;">
                         <li
                             class="nav-item rounded-5"
-                            style="background-color: #000957;"
+                            style="background-color: var(--color-surface-alt);"
                         >
                             <a
                                 class="text nav-link"
@@ -121,7 +121,7 @@ const regularMembers = [...activeMembers]
                 <div
                     id="col2Main"
                     class="col-lg-8 col-md-12 d-flex flex-column justify-content-center"
-                    style="background-color: #000957d8; min-height: 600px;"
+                    style="background-color: var(--color-surface-alt); min-height: 600px; padding-top: 15px; padding-bottom: 15px;"
                 >
                 </div>
             </div>
@@ -129,7 +129,10 @@ const regularMembers = [...activeMembers]
 
         <br />
 
-        <div class="container-fluid" style="background-color: #000957;">
+        <div
+            class="container-fluid"
+            style="background-color: var(--color-surface-alt);"
+        >
             <div class="row">
                 <div class="col-12" style="padding: 50px 0 0 20px;">
                     <h1
@@ -147,7 +150,7 @@ const regularMembers = [...activeMembers]
                             execMembers.map((row) => (
                                 <div
                                     class="text name col-lg-3 col-sm-12"
-                                    style="margin: 2px 0 2px 0;"
+                                    style="margin: 2px 0 2px 0; color: var(--color-text-muted) !important;"
                                 >
                                     <b>{ucwords(row.position)}: </b>
                                     {ucwords(row["firstName"])}{" "}
@@ -171,7 +174,7 @@ const regularMembers = [...activeMembers]
                                 return (
                                     <div
                                         class="text name col-lg-3 col-sm-12"
-                                        style="margin: 2px 0 2px 0"
+                                        style="margin: 2px 0 2px 0; color: var(--color-text-muted) !important;"
                                     >
                                         <b>{formattedPosition}: </b>
                                         {ucwords(row["firstName"])}{" "}
@@ -188,7 +191,10 @@ const regularMembers = [...activeMembers]
                     <div class="row">
                         {
                             leads.map((row) => (
-                                <div class="text name col-lg-3 col-sm-12">
+                                <div
+                                    class="text name col-lg-3 col-sm-12"
+                                    style=" color: var(--color-text-muted) !important;"
+                                >
                                     <b>{ucwords(row.position)}: </b>
                                     {ucwords(row["firstName"])}{" "}
                                     {ucwords(row["lastName"])}
@@ -200,7 +206,7 @@ const regularMembers = [...activeMembers]
                     <!-- MEMBERS -->
                     <div class="row">
                         <h2
-                            style="color: #828bda; font-family: 'Sansation', sans-serif; font-weight: 700; padding-top: 50px"
+                            style="color:  color: var(--color-text-muted) !important;; font-family: 'Sansation', sans-serif; font-weight: 700; padding-top: 50px"
                         >
                             Members
                         </h2>
@@ -208,7 +214,7 @@ const regularMembers = [...activeMembers]
                             regularMembers.map((row) => (
                                 <div
                                     class="text name col-lg-3 col-sm-12"
-                                    style="margin: 2px 0 2px 0;"
+                                    style="margin: 2px 0 2px 0; color: var(--color-text-muted) !important;"
                                 >
                                     {ucwords(row["lastName"])},{" "}
                                     {ucwords(row["firstName"])}

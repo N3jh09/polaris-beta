@@ -51,7 +51,7 @@ const posts = (await getCollection("blog"))
 					<ul class="nav" style="margin-top: 10px;">
 						<li
 							class="nav-item rounded-5"
-							style="background-color: #000957; margin-right: 10px;"
+							style="background-color: var(--color-surface-alt); margin-right: 10px;"
 						>
 							<a
 								class="text nav-link"
@@ -63,7 +63,7 @@ const posts = (await getCollection("blog"))
 						</li>
 						<li
 							class="nav-item rounded-5"
-							style="background-color: #000957; margin-right: 10px;"
+							style="background-color: var(--color-surface-alt); margin-right: 10px;"
 						>
 							<a
 								class="text nav-link"
@@ -75,7 +75,7 @@ const posts = (await getCollection("blog"))
 						</li>
 						<li
 							class="nav-item rounded-5"
-							style="background-color: #000957;"
+							style="background-color: var(--color-surface-alt);"
 						>
 							<a
 								class="text nav-link"
@@ -92,7 +92,7 @@ const posts = (await getCollection("blog"))
 				<div
 					id="col2Main"
 					class="col-lg-8 col-md-12 d-flex flex-column justify-content-center"
-					style="background-color: #000957d8; min-height: 600px; padding-top: 15px; padding-bottom: 15px;"
+					style="background-color: var(--color-surface-alt); min-height: 600px; padding-top: 15px; padding-bottom: 15px;"
 				>
 					<div class="row g-3">
 						<div class="col-sm-6" style="position: relative;">
@@ -158,24 +158,24 @@ const posts = (await getCollection("blog"))
 												style={positionClass}
 											>
 												<div class="card-body">
+													<p style="font-size: 12px; margin-bottom: 0px; color: var(--color-text-muted-1);">
+														{new Date(
+															post.data.pubDate,
+														).toLocaleString(
+															"en-US",
+															{
+																month: "2-digit",
+																day: "2-digit",
+																year: "numeric",
+															},
+														)}
+													</p>
 													<h5>
 														<b>
 															<a
-																style="margin: 0; color: #000957;"
+																style="margin: 0; color: var(--color-text);"
 																href={`/blog/${post.id}`}
 															>
-																{new Date(
-																	post.data
-																		.pubDate,
-																).toLocaleString(
-																	"en-US",
-																	{
-																		month: "2-digit",
-																		day: "2-digit",
-																		year: "numeric",
-																	},
-																)}
-																・
 																{
 																	post.data
 																		.title
@@ -197,7 +197,10 @@ const posts = (await getCollection("blog"))
 
 		<br />
 
-		<div class="container-fluid" style="background-color: #000957;">
+		<div
+			class="container-fluid"
+			style="background-color: var(--color-surface-alt);"
+		>
 			<div class="row">
 				<div class="col-12" style="padding: 50px 0 0 20px;">
 					<h1
@@ -210,7 +213,7 @@ const posts = (await getCollection("blog"))
 			<div class="row">
 				<div
 					class="col-12 text"
-					style="padding: 20px 20px 50px 20px; color: #828bda !important;"
+					style="padding: 20px 20px 50px 20px; color: var(--color-text-muted) !important;"
 				>
 					This website is a CONCEPT product of polaris. Although the
 					website is functional and is considered as Polaris Northern

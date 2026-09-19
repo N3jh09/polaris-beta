@@ -1,5 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Soyombo&family=Sansation:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
 
+:root {
+  --blue-dark: #0A1830;
+  --blue-mid: #0F2242;
+  --blue-light: #28426A;
+  --white: #FFFFFF;
+  --black: #101826;
+  --yellow: #E8A33D;
+}
+
+:root {
+  --color-bg: var(--white);
+  --color-bg-inverted: var(--blue-dark);
+  --color-surface: var(--white);
+  /* cards, panels */
+  --color-surface-alt: var(--blue-mid);
+  --color-surface-alt-1: var(--blue-light);
+
+  --color-text: var(--black);
+  --color-text-inverted: var(--white);
+  --color-text-muted: #4e688e;
+  --color-text-muted-1: #6b7381;
+  /* often a tint, not a raw palette color */
+
+  --color-accent: var(--yellow);
+  --color-accent-text: var(--black);
+  /* text ON the accent, for contrast */
+
+  --color-border: #4e688e;
+  --color-focus-ring: var(--yellow);
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -17,16 +48,6 @@ body {
   /* Dynamically adds/removes columns based on available space */
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
-}
-
-.bigBoxBG {
-  content: "";
-  background: linear-gradient(135deg,
-      #181b60, #280195, #212774);
-  width: calc(95% + 5px);
-  height: calc(100% + 5px);
-  filter: blur(2px);
-  display: none;
 }
 
 .bigBox {

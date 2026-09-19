@@ -30,7 +30,7 @@ const pageTags = Array.from(
 <!doctype html>
 <html>
     <head>
-        <Layout title={`Blogs and News - Page ${page.currentPage}`} />
+        <Layout title={`Articles - Page ${page.currentPage}`} />
     </head>
     <body>
         <Nav />
@@ -38,10 +38,10 @@ const pageTags = Array.from(
             <div class="row" style="background-color: white;">
                 <div
                     class="col-lg-3 col-sm-12"
-                    style="padding: 50px 20px 20px 20px; background-color: #191925;"
+                    style="padding: 50px 20px 20px 20px; background-color: var(--color-surface-alt);"
                 >
                     <h3
-                        style="padding-bottom: 0; padding-left: 5px; color: white;"
+                        style="padding-bottom: 0; padding-left: 5px; color: var(--color-text-inverted);"
                     >
                         Search Articles
                     </h3>
@@ -73,13 +73,13 @@ const pageTags = Array.from(
                             >submit search</button
                         >
                     </form>
-                    <hr />
+                    <hr style="color: var(--color-text-muted);" />
                     {
                         pageTags.length > 0 && (
                             <div style="margin-top: 20px;">
-                                <h5 style="padding-bottom: 0; padding-left: 5px; color: #8686a6;">
+                                <p style="padding-bottom: 0; padding-left: 5px; color: var(--color-text-muted);">
                                     view articles with similar tags
-                                </h5>
+                                </p>
                                 <div class="tag-row">
                                     {pageTags.map((t) => (
                                         <a
@@ -99,9 +99,14 @@ const pageTags = Array.from(
                     style="padding: 0 15px 30px 30px;"
                 >
                     <div class="col-12 headerTitle">
-                        <h6 style="color: #000957;"><b>POLARIS Articles</b></h6>
+                        <h6 style="color: var(--color-accent);">
+                            <b>POLARIS Articles</b>
+                        </h6>
                         <h1><b>ARTICLES</b></h1>
-                        <p class="headerText col-lg-9 col-sm-12">
+                        <p
+                            class="headerText col-lg-9 col-sm-12"
+                            style="color: var(--color-text-muted-1);"
+                        >
                             Interested in astronomy and Space? Read our
                             community written articles. Scroll chronologically
                             or use the search feature to filter through post
@@ -114,7 +119,7 @@ const pageTags = Array.from(
                                 <a
                                     class="col-12"
                                     href={`/article/${i.id}`}
-                                    style="color: #000957; text-decoration: none;"
+                                    style="color: var(--color-text); text-decoration: none;"
                                 >
                                     <h3>{i.data.title}</h3>
                                 </a>
@@ -122,7 +127,7 @@ const pageTags = Array.from(
                                     class="col-lg-10 col-sm-12"
                                     style="padding-bottom: 10px; margin-top: -5px;"
                                 >
-                                    <p style="color: #adadad; margin-bottom: 0;">
+                                    <p style="color: var(--color-text-muted-1); margin-bottom: 0; font-size: 14px;">
                                         by {i.data.author}・
                                         {new Date(
                                             i.data.pubDate,
@@ -150,7 +155,7 @@ const pageTags = Array.from(
                                 <div class="col-lg-2 col-sm-12 redPBtn">
                                     <a
                                         href={`/article/${i.id}`}
-                                        style="padding: 10px; background-color: #000957; color: white; text-decoration: none; border-radius: 5px;"
+                                        style="padding: 10px; background-color: var(--color-text); color: white; text-decoration: none; border-radius: 5px;"
                                     >
                                         Read Post
                                     </a>
@@ -164,7 +169,10 @@ const pageTags = Array.from(
 
         <!-- Pagination Controls -->
         <div class="container-fluid">
-            <div class="row" style="background-color: #000957;">
+            <div
+                class="row"
+                style="background-color: var(--color-bg-inverted);"
+            >
                 <nav class="pagination-controls">
                     {
                         page.url.prev ? (
@@ -248,19 +256,19 @@ const pageTags = Array.from(
 
     .filterItem {
         padding: 10px;
-        border-radius: 50px;
-        border: 2px solid #474759;
+        border-radius: 5px;
+        border: 1px solid var(--color-border);
         margin-bottom: 5px;
-        background-color: #474759;
+        background-color: var(--color-surface-alt-1);
         color: white;
     }
 
     .filterItem::placeholder {
-        color: #8686a6;
+        color: var(--color-text-muted);
     }
 
     .filterItem:focus {
-        border: 2px solid #8686a6;
+        border: 2px solid var(--color-focus-ring);
         outline: none;
     }
 
@@ -275,14 +283,15 @@ const pageTags = Array.from(
         display: inline-block;
         padding: 4px 12px;
         border-radius: 50px;
-        background-color: #000957;
-        color: #afb6f7;
+        background-color: var(--color-surface-alt);
+        color: var(--color-text-inverted);
         font-size: 0.85rem;
         text-decoration: none;
+        border: 1px solid var(--color-surface-alt-1);
     }
 
     .tag-pill:hover {
-        background-color: #dde1f5;
+        border: 1px solid var(--color-focus-ring);
     }
 
     .headerTitle {
@@ -295,10 +304,14 @@ const pageTags = Array.from(
 
     #submitSearch {
         padding: 10px;
-        background-color: #000957;
-        color: #afb6f7;
+        background-color: var(--color-accent);
+        color: var(--color-accent-text);
         border: none;
         border-radius: 5px;
+    }
+
+    #submitSearch:hover {
+        background-color: #da8d18;
     }
 
     @media only screen and (max-width: 800px) {

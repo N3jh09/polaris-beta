@@ -3,9 +3,15 @@ const currentPath = Astro.url.pathname;
 import "../assets/main.css";
 ---
 
-<nav class="navbar navbar-expand-sm" style="background-color: #000957;">
+<nav
+    class="navbar navbar-expand-sm"
+    style="background-color: var(--color-bg-inverted);"
+>
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">POLARIS</a>
+        <a class="navbar-brand" href="/">
+            <b style="color: var(--color-accent);">・</b>
+            POLARIS
+        </a>
         <button
             class="navbar-toggler"
             type="button"
