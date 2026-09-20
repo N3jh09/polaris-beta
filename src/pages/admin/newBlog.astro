@@ -97,7 +97,9 @@ const authorsList = authorData?.authors ?? [];
                     <div class="banner-picker col-12">
                         <div class="banner-preview" id="bannerPreviewWrap">
                             <img id="bannerPreview" alt="" hidden />
-                            <span id="bannerPreviewEmpty">No banner selected</span>
+                            <span id="bannerPreviewEmpty"
+                                >No banner selected</span
+                            >
                         </div>
                         <button
                             type="button"
@@ -152,10 +154,20 @@ const authorsList = authorData?.authors ?? [];
             declare const TurndownService: any;
             import Quill from "quill";
             import "quill/dist/quill.snow.css";
-            import { setupImageHandler, openImageLibrary } from "../../scripts/imageLibrary";
+            import {
+                setupImageHandler,
+                openImageLibrary,
+            } from "../../scripts/imageLibrary";
 
             const toolbarOptions = [
-                [{ header: 1 }, { header: 2 }],
+                [
+                    { header: 1 },
+                    { header: 2 },
+                    { header: 3 },
+                    { header: 4 },
+                    { header: 5 },
+                    { header: 6 },
+                ],
                 [{ list: "ordered" }, { list: "bullet" }],
                 ["bold", "italic", "blockquote", "link", "image"],
             ];
@@ -169,8 +181,7 @@ const authorsList = authorData?.authors ?? [];
             });
 
             const getAdminKey = () =>
-                (document.getElementById("keyCode") as HTMLInputElement)
-                    .value;
+                (document.getElementById("keyCode") as HTMLInputElement).value;
 
             // Route the toolbar's image button through the GitHub-backed
             // image library instead of Quill's default URL prompt.
@@ -202,7 +213,10 @@ const authorsList = authorData?.authors ?? [];
             document
                 .getElementById("bannerPickBtn")
                 ?.addEventListener("click", () => {
-                    openImageLibrary({ getKey: getAdminKey, onPick: setBanner });
+                    openImageLibrary({
+                        getKey: getAdminKey,
+                        onPick: setBanner,
+                    });
                 });
 
             bannerClearBtn?.addEventListener("click", () => {
