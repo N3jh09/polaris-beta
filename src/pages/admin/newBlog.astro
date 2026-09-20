@@ -93,6 +93,25 @@ const authorsList = authorData?.authors ?? [];
                         id="description"
                         placeholder="A short summary of the post..."
                         rows="2"></textarea>
+                    <label for="bannerPickBtn">Banner / Thumbnail Image</label>
+                    <div class="banner-picker col-12">
+                        <div class="banner-preview" id="bannerPreviewWrap">
+                            <img id="bannerPreview" alt="" hidden />
+                            <span id="bannerPreviewEmpty">No banner selected</span>
+                        </div>
+                        <button
+                            type="button"
+                            id="bannerPickBtn"
+                            class="banner-pick-btn">Choose from library</button
+                        >
+                        <button
+                            type="button"
+                            id="bannerClearBtn"
+                            class="banner-clear-btn"
+                            hidden>Remove</button
+                        >
+                    </div>
+                    <input type="hidden" id="banner" />
                     <label for="keyCode">
                         <h5>Before you proceed...</h5>
                         Please enter the admin code. You will NOT be able to publish
@@ -133,6 +152,7 @@ const authorsList = authorData?.authors ?? [];
             declare const TurndownService: any;
             import Quill from "quill";
             import "quill/dist/quill.snow.css";
+            import { setupImageHandler, openImageLibrary } from "../../scripts/imageLibrary";
 
             const toolbarOptions = [
                 [{ header: 1 }, { header: 2 }],
@@ -146,6 +166,50 @@ const authorsList = authorData?.authors ?? [];
                     toolbar: toolbarOptions,
                 },
                 theme: "snow",
+            });
+
+            const getAdminKey = () =>
+                (document.getElementById("keyCode") as HTMLInputElement)
+                    .value;
+
+            // Route the toolbar's image button through the GitHub-backed
+            // image library instead of Quill's default URL prompt.
+            setupImageHandler(quill, getAdminKey);
+
+            // Banner/thumbnail picker — same library, but just sets a field
+            // instead of inserting into the post body.
+            const bannerInput = document.getElementById(
+                "banner",
+            ) as HTMLInputElement;
+            const bannerPreview = document.getElementById(
+                "bannerPreview",
+            ) as HTMLImageElement;
+            const bannerPreviewEmpty = document.getElementById(
+                "bannerPreviewEmpty",
+            ) as HTMLSpanElement;
+            const bannerClearBtn = document.getElementById(
+                "bannerClearBtn",
+            ) as HTMLButtonElement;
+
+            function setBanner(url: string) {
+                bannerInput.value = url;
+                bannerPreview.src = url;
+                bannerPreview.hidden = false;
+                bannerPreviewEmpty.hidden = true;
+                bannerClearBtn.hidden = false;
+            }
+
+            document
+                .getElementById("bannerPickBtn")
+                ?.addEventListener("click", () => {
+                    openImageLibrary({ getKey: getAdminKey, onPick: setBanner });
+                });
+
+            bannerClearBtn?.addEventListener("click", () => {
+                bannerInput.value = "";
+                bannerPreview.hidden = true;
+                bannerPreviewEmpty.hidden = false;
+                bannerClearBtn.hidden = true;
             });
 
             const publishBtn = document.getElementById("publish-btn");
@@ -208,13 +272,17 @@ const authorsList = authorData?.authors ?? [];
                 );
 
                 // 4. Construct Markdown with Frontmatter YAML
+                const bannerLine = bannerInput.value
+                    ? `banner: "${bannerInput.value}"\n`
+                    : "";
+
                 const fullMarkdown = `---
 title: "${title.replace(/"/g, '\\"')}"
 author: "${author.replace(/"/g, '\\"')}"
 pubDate: ${pubDate}
 slug: "${slug}"
 desc: "${description.replace(/"/g, '\\"')}"
----
+${bannerLine}---
 
 ${bodyMarkdown}`;
 
@@ -271,6 +339,42 @@ ${bodyMarkdown}`;
     #editor {
         height: 300px;
         background: #fff;
+    }
+    .banner-picker {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+    }
+    .banner-preview {
+        width: 140px;
+        height: 80px;
+        border: 1px dashed #ccc;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: #fafafa;
+        font-size: 0.75rem;
+        color: #999;
+        text-align: center;
+        padding: 4px;
+    }
+    .banner-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .banner-pick-btn,
+    .banner-clear-btn {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.85rem;
+        width: auto;
+    }
+    .banner-clear-btn {
+        background-color: #b3261e;
     }
     button {
         padding: 0.8rem;

@@ -77,6 +77,15 @@ const { Content } = await render(post);
                         .toLocaleLowerCase()
                 } ・ written by {post.data.author.toLowerCase()}
             </p>
+            {
+                post.data.banner && (
+                    <img
+                        src={post.data.banner}
+                        alt=""
+                        class="col-12 post-banner"
+                    />
+                )
+            }
             <br />
             <div class="col-lg-9 col-sm-12 post-content">
                 <Content />
@@ -127,6 +136,13 @@ const { Content } = await render(post);
 </BaseLayout>
 
 <style>
+    .post-banner {
+        width: 100%;
+        max-height: 380px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin: 12px 0;
+    }
     .filterItem {
         padding: 10px;
         border-radius: 5px;

@@ -10,6 +10,7 @@ const blog = defineCollection({
         desc: z.string(),
         pubDate: z.date(),
         author: z.string(),
+        banner: z.string().optional(),
     }),
 });
 
@@ -22,6 +23,7 @@ const article = defineCollection({
         pubDate: z.date(),
         author: z.string(),
         tags: z.array(z.string()).default([]),
+        banner: z.string().optional(),
     }),
 });
 

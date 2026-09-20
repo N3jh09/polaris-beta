@@ -130,7 +130,7 @@ const { page } = Astro.props;
                     </div>
                     {
                         page.data.map((i) => (
-                            <Little>
+                            <Little banner={i.data.banner}>
                                 <a
                                     class="col-12"
                                     href={`/blog/${i.id}`}

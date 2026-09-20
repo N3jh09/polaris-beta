@@ -110,7 +110,7 @@ const nextUrl = currentPage < lastPage ? buildPageUrl(currentPage + 1) : null;
 
                     {
                         pagedResults.map((i) => (
-                            <Little>
+                            <Little banner={i.data.banner}>
                                 <a
                                     class="col-12"
                                     href={`/article/${i.id}`}
