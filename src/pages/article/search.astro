@@ -110,7 +110,10 @@ const nextUrl = currentPage < lastPage ? buildPageUrl(currentPage + 1) : null;
 
                     {
                         pagedResults.map((i) => (
-                            <Little banner={i.data.banner}>
+                            <Little
+                                banner={i.data.banner}
+                                href={`/article/${i.id}`}
+                            >
                                 <a
                                     class="col-12"
                                     href={`/article/${i.id}`}
@@ -119,7 +122,7 @@ const nextUrl = currentPage < lastPage ? buildPageUrl(currentPage + 1) : null;
                                     <h3>{i.data.title}</h3>
                                 </a>
                                 <div
-                                    class="col-lg-10 col-sm-12"
+                                    class="col-12"
                                     style="padding-bottom: 10px; margin-top: -5px;"
                                 >
                                     <p style="color: var(--color-text-muted-1); margin-bottom: 0;">
@@ -145,15 +148,6 @@ const nextUrl = currentPage < lastPage ? buildPageUrl(currentPage + 1) : null;
                                             ))}
                                         </div>
                                     )}
-                                </div>
-
-                                <div class="col-lg-2 col-sm-12 redPBtn">
-                                    <a
-                                        href={`/article/${i.id}`}
-                                        style="padding: 10px; background-color: var(--color-text); color: white; text-decoration: none; border-radius: 5px;"
-                                    >
-                                        Read Post
-                                    </a>
                                 </div>
                             </Little>
                         ))
@@ -268,13 +262,5 @@ const nextUrl = currentPage < lastPage ? buildPageUrl(currentPage + 1) : null;
 
     .tag-pill:hover {
         border: 1px solid var(--color-focus-ring);
-    }
-
-    @media only screen and (max-width: 800px) {
-        .redPBtn {
-            display: flex;
-            justify-content: flex-end;
-            font-size: 14px;
-        }
     }
 </style>

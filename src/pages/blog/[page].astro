@@ -130,7 +130,10 @@ const { page } = Astro.props;
                     </div>
                     {
                         page.data.map((i) => (
-                            <Little banner={i.data.banner}>
+                            <Little
+                                banner={i.data.banner}
+                                href={`/blog/${i.id}`}
+                            >
                                 <a
                                     class="col-12"
                                     href={`/blog/${i.id}`}
@@ -139,7 +142,7 @@ const { page } = Astro.props;
                                     <h3>{i.data.title}</h3>
                                 </a>
                                 <div
-                                    class="col-lg-10 col-sm-12"
+                                    class="col-12"
                                     style="padding-bottom: 10px; margin-top: -5px;"
                                 >
                                     <p style="color: var(--color-text-muted-1); margin-bottom: 0;">
@@ -153,15 +156,6 @@ const { page } = Astro.props;
                                         })}
                                     </p>
                                     {i.data.desc}
-                                </div>
-
-                                <div class="col-lg-2 col-sm-12 redPBtn">
-                                    <a
-                                        href={`/blog/${i.id}`}
-                                        style="padding: 10px; background-color: var(--color-text); color: white; text-decoration: none; border-radius: 5px;"
-                                    >
-                                        Read Post
-                                    </a>
                                 </div>
                             </Little>
                         ))
@@ -304,12 +298,6 @@ const { page } = Astro.props;
 
         .headerText {
             font-size: 16px !important;
-        }
-
-        .redPBtn {
-            display: flex;
-            justify-content: flex-end;
-            font-size: 14px;
         }
 
         .contentBody {
