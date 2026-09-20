@@ -65,18 +65,6 @@ const { Content } = await render(post);
             <h6 style="color: var(--color-surface-alt-1);">
                 <b>POLARIS Blogs</b>
             </h6>
-            <h1 class="col-lg-8 col-sm-12"><b>{post.data.title}</b></h1>
-            <p style="color: var(--color-text-muted-1);">
-                | uploaded on {
-                    new Date(post.data.pubDate)
-                        .toLocaleString("en-US", {
-                            month: "long",
-                            day: "numeric",
-                            year: "numeric",
-                        })
-                        .toLocaleLowerCase()
-                } ・ written by {post.data.author.toLowerCase()}
-            </p>
             {
                 post.data.banner && (
                     <img
@@ -86,14 +74,29 @@ const { Content } = await render(post);
                     />
                 )
             }
-            <br />
+            <h1 class="col-lg-8 col-sm-12"><b>{post.data.title}</b></h1>
+            <p style="color: var(--color-text);">
+                {post.data.desc}
+            </p>
+            <p style="color: var(--color-text-muted-1);">
+                | uploaded on {
+                    new Date(post.data.pubDate)
+                        .toLocaleString("en-US", {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                        })
+                        .toLocaleLowerCase()
+                } ・ by {post.data.author.toLowerCase()}
+            </p>
+            <hr style="color: var(--color-text-muted-1);" />
             <div class="col-lg-9 col-sm-12 post-content">
                 <Content />
             </div>
         </div>
         <div class="col-lg-3 col-sm-12" style="padding-top: 50px;">
             <div
-                style="border: 2px solid var(--color-surface-alt-1); padding: 15px; border-radius: 5px; background-color: var(--color-surface-alt);"
+                style="border: 2px solid lightgrey; padding: 15px; border-radius: 5px; background-color: var(--color-surface-alt);"
             >
                 <p
                     style="padding-bottom: 0; color: var(--color-text-inverted);"

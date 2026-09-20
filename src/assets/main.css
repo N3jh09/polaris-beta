@@ -69,6 +69,14 @@ body {
   font-size: 20px !important;
 }
 
+.post-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1rem auto;
+  border-radius: 6px;
+}
+
 @media only screen and (max-width: 800px) {
   body {
     background-image: url(../assets/bgportrait.jpeg);

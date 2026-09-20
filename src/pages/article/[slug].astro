@@ -32,29 +32,7 @@ const { Content } = await render(post);
             <h6 style="color: var(--color-surface-alt-1);">
                 <b>POLARIS Articles</b>
             </h6>
-            <h1 class="col-lg-8 col-sm-12"><b>{post.data.title}</b></h1>
-            <p style="color: var(--color-text-muted-1);">
-                | uploaded on {
-                    new Date(post.data.pubDate)
-                        .toLocaleString("en-US", {
-                            month: "long",
-                            day: "numeric",
-                            year: "numeric",
-                        })
-                        .toLocaleLowerCase()
-                } ・ written by {post.data.author.toLowerCase()}
-            </p>
-            {
-                post.data.tags && post.data.tags.length > 0 && (
-                    <div class="tag-row">
-                        {post.data.tags.map((tag) => (
-                            <a href={`/article/tag/${tag}/1`} class="tag-pill">
-                                {tag}
-                            </a>
-                        ))}
-                    </div>
-                )
-            }
+
             {
                 post.data.banner && (
                     <img
@@ -64,7 +42,22 @@ const { Content } = await render(post);
                     />
                 )
             }
-            <br />
+            <h1 class="col-lg-8 col-sm-12"><b>{post.data.title}</b></h1>
+            <p style="color: var(--color-text);">
+                {post.data.desc}
+            </p>
+            <p style="color: var(--color-text-muted-1);">
+                | uploaded on {
+                    new Date(post.data.pubDate)
+                        .toLocaleString("en-US", {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                        })
+                        .toLocaleLowerCase()
+                } ・ by {post.data.author.toLowerCase()}
+            </p>
+            <hr style="color: var(--color-text-muted-1);" />
             <div class="col-lg-9 col-sm-12 post-content">
                 <Content />
             </div>
@@ -107,6 +100,19 @@ const { Content } = await render(post);
                     >
                 </form>
             </div>
+            <hr style="color: var(--color-text-muted-1);" />
+            <p style="color: var(--color-text-muted-1);">article tags</p>
+            {
+                post.data.tags && post.data.tags.length > 0 && (
+                    <div class="tag-row">
+                        {post.data.tags.map((tag) => (
+                            <a href={`/article/tag/${tag}/1`} class="tag-pill">
+                                {tag}
+                            </a>
+                        ))}
+                    </div>
+                )
+            }
         </div>
     </div>
 </BaseLayout>

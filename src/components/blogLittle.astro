@@ -24,11 +24,30 @@ const { banner } = Astro.props;
         height: 180px;
         overflow: hidden;
         border-radius: 6px 6px 0 0;
+        flex-shrink: 0;
     }
     .newsThumb img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         display: block;
+    }
+
+    /* Laptop+ : banner on the left, details on the right */
+    @media only screen and (min-width: 801px) {
+        .newsMain {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+        }
+        .newsThumb {
+            width: 280px;
+            height: auto;
+            border-radius: 6px 0 0 6px;
+        }
+        .newsMain > .card-body {
+            flex: 1;
+            min-width: 0;
+        }
     }
 </style>
