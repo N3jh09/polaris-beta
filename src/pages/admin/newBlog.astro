@@ -160,16 +160,9 @@ const authorsList = authorData?.authors ?? [];
             } from "../../scripts/imageLibrary";
 
             const toolbarOptions = [
-                [
-                    { header: 1 },
-                    { header: 2 },
-                    { header: 3 },
-                    { header: 4 },
-                    { header: 5 },
-                    { header: 6 },
-                ],
+                [{ header: 3 }, { header: 4 }, { header: 5 }],
                 [{ list: "ordered" }, { list: "bullet" }],
-                ["bold", "italic", "blockquote", "link", "image"],
+                ["bold", "italic", "link", "image"],
             ];
 
             const turndownService = new TurndownService();
@@ -245,7 +238,7 @@ const authorsList = authorData?.authors ?? [];
 
                 const title = (
                     document.getElementById("title") as HTMLInputElement
-                ).value;
+                ).value.toUpperCase();
                 const author = (
                     document.getElementById("author") as HTMLInputElement
                 ).value;
