@@ -57,7 +57,7 @@ const authorsList = authorData?.authors ?? [];
         <div class="container-fluid" style="margin-top: 50px;">
             <div class="row justify-content-center">
                 <div class="col-lg-4 col-sm-12">
-                    <h3 class="col-12">Post Details</h3>
+                    <h3 class="col-12">Blog Details</h3>
                     <input
                         class="col-12"
                         type="text"
@@ -86,7 +86,7 @@ const authorsList = authorData?.authors ?? [];
                         }
                     </select>
                     <br /><br />
-                    <label for="description">Post Description</label>
+                    <label for="description">Blog Description</label>
                     <textarea
                         class="col-12"
                         name="description"
@@ -130,12 +130,20 @@ const authorsList = authorData?.authors ?? [];
                     <br /><br /><br />
                 </div>
                 <div class="col-lg-6 col-sm-12">
-                    <h3 class="col-12">Post Content</h3>
+                    <h3 class="col-12">Blog Content</h3>
                     <div id="editor"></div>
                 </div>
             </div>
         </div>
 
+        <div
+            class="container-fluid"
+            style="text-align: center; color: red; font-size: 14px;"
+        >
+            IMPORTANT! <br /> Altering or removing posts requires admin intervention.
+            Make sure your post is correct and ready to publish. If you encounter
+            any issues, contact the website admin.
+        </div>
         <div class="container-fluid">
             <div class="editor-container">
                 <button id="publish-btn" type="button">Publish Blog</button>
@@ -160,9 +168,8 @@ const authorsList = authorData?.authors ?? [];
             } from "../../scripts/imageLibrary";
 
             const toolbarOptions = [
-                [{ header: 3 }, { header: 4 }, { header: 5 }],
-                [{ list: "ordered" }, { list: "bullet" }],
                 ["bold", "italic", "link", "image"],
+                [{ list: "ordered" }, { list: "bullet" }],
             ];
 
             const turndownService = new TurndownService();
