@@ -42,7 +42,9 @@ const { Content } = await render(post);
                     />
                 )
             }
-            <h1 class="col-lg-8 col-sm-12"><b>{post.data.title}</b></h1>
+            <h1 class="col-lg-8 col-sm-12">
+                <b>{post.data.title.toUpperCase()}</b>
+            </h1>
             <p style="color: var(--color-text);">
                 {post.data.desc}
             </p>

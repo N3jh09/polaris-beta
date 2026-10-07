@@ -65,13 +65,26 @@ const authorsList = authorData?.authors ?? [];
                         placeholder="TITLE"
                         required
                     />
-                    <input
-                        class="col-12"
-                        type="text"
-                        id="author"
-                        placeholder="Author Alias"
-                        required
-                    />
+                    <select class="col-12" name="author" id="author" required>
+                        <option
+                            value=""
+                            selected
+                            disabled
+                            hidden
+                            style="color: grey;">Author</option
+                        >
+                        {
+                            authorsList.length === 0 ? (
+                                <option value="" disabled selected>
+                                    No authors found
+                                </option>
+                            ) : (
+                                authorsList.map((author) => (
+                                    <option value={author}>{author}</option>
+                                ))
+                            )
+                        }
+                    </select>
                     <br /><br />
                     <label for="description">Article Description</label>
                     <textarea
@@ -265,7 +278,7 @@ const authorsList = authorData?.authors ?? [];
 
                 const title = (
                     document.getElementById("title") as HTMLInputElement
-                ).value.toUpperCase();
+                ).value;
                 const author = (
                     document.getElementById("author") as HTMLInputElement
                 ).value;
