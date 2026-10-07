@@ -15,7 +15,7 @@
         "position": "Vice President"
     },
     {
-        "firstName": "Irish Feby",
+        "firstName": "Irish Feby Ruth",
         "lastName": "Villa Cruz",
         "position": "Secretary"
     },
@@ -50,7 +50,7 @@
         "position": "Media Lead"
     },
     {
-        "firstName": "Lleanne",
+        "firstName": "Jhoe Lleanne",
         "lastName": "Baltazar",
         "position": "Creatives Lead"
     },
@@ -67,6 +67,71 @@
     {
         "firstName": "Nadine",
         "lastName": "Natividad",
+        "position": "Member"
+    },
+    {
+        "firstName": "Alaina Yumira",
+        "lastName": "Estimada",
+        "position": "Member"
+    },
+    {
+        "firstName": "Eliezha Louise",
+        "lastName": "Asuncion",
+        "position": "Member"
+    },
+    {
+        "firstName": "Mikhaela Angelie",
+        "lastName": "Sanchez",
+        "position": "Member"
+    },
+    {
+        "firstName": "Lia Samantha",
+        "lastName": "Simon",
+        "position": "Member"
+    },
+    {
+        "firstName": "Aliyah Reign",
+        "lastName": "Suguitan",
+        "position": "Member"
+    },
+    {
+        "firstName": "Angela Beatrice",
+        "lastName": "Pablico",
+        "position": "Member"
+    },
+    {
+        "firstName": "Carl Chester",
+        "lastName": "Reyes",
+        "position": "Member"
+    },
+    {
+        "firstName": "Erich",
+        "lastName": "Maranel",
+        "position": "Member"
+    },
+    {
+        "firstName": "Francis Mitchil",
+        "lastName": "Ferrer",
+        "position": "Member"
+    },
+    {
+        "firstName": "Jaemy Denielle",
+        "lastName": "Navalta",
+        "position": "Member"
+    },
+    {
+        "firstName": "Khylene Ainssley",
+        "lastName": "",
+        "position": "Member"
+    },
+    {
+        "firstName": "Princess",
+        "lastName": "Bascao",
+        "position": "Member"
+    },
+    {
+        "firstName": "Samantha Mhel",
+        "lastName": "Borja",
         "position": "Member"
     }
 ]
